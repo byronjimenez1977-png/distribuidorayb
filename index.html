@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Distribuidora A & B</title>
   <style>
-    /* Fondo animado con burbujas */
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
@@ -27,7 +26,6 @@
       animation: burbujas 10s linear infinite;
     }
 
-    /* Encabezado */
     header {
       background: linear-gradient(to right, #007bff, #00c6ff);
       color: white;
@@ -45,7 +43,6 @@
       height: 80px;
       border-radius: 50%;
       object-fit: cover;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       background: white;
     }
 
@@ -107,7 +104,7 @@
       text-align: center;
       overflow: hidden;
       transition: transform 0.2s ease;
-      padding-bottom: 10px;
+      padding-bottom: 15px;
     }
 
     .producto:hover {
@@ -127,6 +124,22 @@
     .producto p {
       color: #222;
       font-weight: bold;
+    }
+
+    .btn-whatsapp {
+      background-color: #25D366;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .btn-whatsapp:hover {
+      background-color: #1ebe5d;
     }
 
     .whatsapp-fixed {
@@ -188,22 +201,26 @@
         contenedor.innerHTML = "";
 
         rows.forEach(row => {
-          const cols = row.split(",");
-          if (cols.length >= 4 && cols[1] && cols[2] && cols[3]) {
-            const nombre = cols[1].trim();
-            const precio = cols[2].trim();
-            const imagen = cols[3].trim().replace(/\r/g, "");
-            const whatsapp = `https://wa.me/50247111160?text=Hola%20quiero%20pedir%20${encodeURIComponent(nombre)}%20(Q${precio})`;
+          // Aceptar tanto coma como punto y coma como separador
+          const cols = row.includes(";") ? row.split(";") : row.split(",");
+          if (cols.length >= 4) {
+            let nombre = cols[1].trim().replace(/""/g, "").replace(/"/g, "");
+            let precio = cols[2].trim();
+            let imagen = cols[3].trim().replace(/\r/g, "").replace(/"/g, "");
 
-            const card = `
-              <div class="producto">
-                <img src="${imagen}" alt="${nombre}" />
-                <h3>${nombre}</h3>
-                <p>Q${precio}</p>
-                <a class="whatsapp-fixed" href="${whatsapp}" target="_blank">🛒 Pedir por WhatsApp</a>
-              </div>
-            `;
-            contenedor.innerHTML += card;
+            if (imagen.startsWith("http")) {
+              const whatsapp = `https://wa.me/50247111160?text=Hola%20quiero%20pedir%20${encodeURIComponent(nombre)}%20(Q${precio})`;
+
+              const card = `
+                <div class="producto">
+                  <img src="${imagen}" alt="${nombre}" onerror="this.src='encabezado.png';">
+                  <h3>${nombre}</h3>
+                  <p>Q${precio}</p>
+                  <a class="btn-whatsapp" href="${whatsapp}" target="_blank">🛒 Pedir por WhatsApp</a>
+                </div>
+              `;
+              contenedor.innerHTML += card;
+            }
           }
         });
       })
@@ -211,7 +228,6 @@
   </script>
 
   <script>
-    // Crear burbujas animadas
     for (let i = 0; i < 12; i++) {
       const burbuja = document.createElement("div");
       burbuja.classList.add("burbuja");
