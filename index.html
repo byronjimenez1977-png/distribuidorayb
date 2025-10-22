@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Distribuidora A & B</title>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: linear-gradient(to bottom, #ccefff, #ffffff);
+    }
+
+    header {
+      background: linear-gradient(to right, #007bff, #00c6ff);
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    header img {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      width: 120px;
+      border-radius: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+
+    /* Aviso de entrega */
+    .aviso-envio {
+      background: #28a745;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      font-size: 1.1em;
+      font-weight: bold;
+      animation: parpadeo 2s infinite;
+    }
+
+    @keyframes parpadeo {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    .intro {
+      background: white;
+      margin: 30px auto;
+      width: 90%;
+      max-width: 800px;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .promo {
+      background: orange;
+      color: white;
+      font-weight: bold;
+      padding: 12px;
+      text-align: center;
+      width: 90%;
+      margin: 20px auto;
+      border-radius: 10px;
+    }
+
+    .productos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      width: 90%;
+      margin: auto;
+    }
+
+    .producto {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      padding-bottom: 15px;
+      transition: transform 0.2s;
+    }
+
+    .producto:hover { transform: scale(1.03); }
+
+    .producto img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .producto h3 { color: #004aad; margin: 10px 0 5px; }
+
+    .producto p { font-weight: bold; margin: 5px 0; }
+
+    .btn-agregar {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-agregar:hover { background-color: #1ebe5d; }
+
+    /* Botón flotante carrito */
+    .cart-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 30px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+      display: none;
+      z-index: 999;
+    }
+
+    .cart-btn:hover { background-color: #1ebe5d; }
+
+    /* Ventana del carrito */
+    .carrito {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 1000;
+    }
+
+    .carrito h3 { text-align: center; margin-top: 0; }
+
+    .carrito-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+
+    .carrito-item img {
+      width: 40px;
+      height: 40px;
+      border-radius: 5px;
+      margin-right: 8px;
+    }
+
+    .carrito-total { text-align: right; font-weight: bold; margin-top: 10px; }
+
+    .btn-vaciar {
+      background: #ff3b30;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .btn-enviar {
+      background: #25D366;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .cerrar {
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      float: right;
+      cursor: pointer;
+    }
+
+    .campo-nombre {
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Distribuidora A & B</h1>
+    <p>Pedidos rápidos y fáciles por WhatsApp 🛒</p>
+    <img src="Encabezado.png" alt="Encabezado" />
+  </header>
+
+  <div class="aviso-envio">
+    🚚 Entrega GRATIS por compras mayores de Q150<br>
+    💵 Pedidos menores tienen un costo de envío de Q15 dentro de Huehuetenango
+  </div>
+
+  <div class="intro">
+    <h2>¡Bienvenidos a Distribuidora A & B!</h2>
+    <p>Te invitamos a conocer y probar nuestros productos de limpieza <b>MAX Oxy</b>, elaborados con excelente calidad y a precios accesibles. 📍 Estamos ubicados en <b>Mercado Las Victorias, Local No. 44, a la par del mercado de la terminal de buses, Zona 5, Huehuetenango.</b></p>
+  </div>
+
+  <div class="promo">💥 ¡A mayoristas precios especiales! 💰</div>
+
+  <div class="productos" id="productos"></div>
+
+  <div class="cart-btn" id="cartBtn" onclick="abrirCarrito()">🛒 Ver carrito (<span id="cartCount">0</span>) — Q<span id="cartTotal">0.00</span></div>
+
+  <div class="carrito" id="carrito">
+    <button class="cerrar" onclick="cerrarCarrito()">✖</button>
+    <h3>🧺 Tu pedido</h3>
+    <div id="carritoItems"></div>
+    <p class="carrito-total">Total: Q<span id="totalFinal">0.00</span></p>
+    <input type="text" id="nombreCliente" class="campo-nombre" placeholder="Tu nombre (opcional)">
+    <br>
+    <button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar carrito</button>
+    <button class="btn-enviar" onclick="enviarWhatsApp()">Enviar pedido</button>
+  </div>
+
+  <script>
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesaBrL74caLRyCnPuBVAMWUSHzfyUelxzclArKYz0H1x6HY5gC0hL3ZPGqkJQbAxsU4D/pub?output=csv&nocache=" + Date.now();
+    const telefono = "50247111160";
+    let carrito = [];
+
+    fetch(sheetURL)
+      .then(res => res.text())
+      .then(data => {
+        const filas = data.split("\n").slice(1);
+        const contenedor = document.getElementById("productos");
+        contenedor.innerHTML = "";
+
+        filas.forEach(row => {
+          const cols = row.split(",");
+          if (cols.length >= 4) {
+            const nombre = cols[1].replace(/"/g, "").trim();
+            const precio = parseFloat(cols[2]);
+            const imagen = cols[3].trim();
+
+            if (nombre && !isNaN(precio) && imagen) {
+              contenedor.innerHTML += `
+                <div class="producto">
+                  <img src="${imagen}" alt="${nombre}" />
+                  <h3>${nombre}</h3>
+                  <p>Q${precio.toFixed(2)}</p>
+                  <button class="btn-agregar" onclick="agregarCarrito('${nombre}', ${precio}, '${imagen}')">Agregar</button>
+                </div>
+              `;
+            }
+          }
+        });
+      });
+
+    function agregarCarrito(nombre, precio, imagen) {
+      const producto = carrito.find(p => p.nombre === nombre);
+      if (producto) producto.cantidad++;
+      else carrito.push({ nombre, precio, imagen, cantidad: 1 });
+      actualizarCarrito();
+    }
+
+    function actualizarCarrito() {
+      const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+      const cantidad = carrito.reduce((acc, p) => acc + p.cantidad, 0);
+      document.getElementById("cartTotal").textContent = total.toFixed(2);
+      document.getElementById("cartCount").textContent = cantidad;
+      document.getElementById("cartBtn").style.display = cantidad > 0 ? "block" : "none";
+    }
+
+    function abrirCarrito() {
+      const lista = document.getElementById("carritoItems");
+      lista.innerHTML = "";
+      carrito.forEach(p => {
+        lista.innerHTML += `
+          <div class="carrito-item">
+            <img src="${p.imagen}" alt="${p.nombre}">
+            <span>${p.nombre} x${p.cantidad}</span>
+            <span>Q${(p.precio * p.cantidad).toFixed(2)}</span>
+          </div>`;
+      });
+      document.getElementById("totalFinal").textContent = carrito.reduce((a, p) => a + p.precio * p.cantidad, 0).toFixed(2);
+      document.getElementById("carrito").style.display = "block";
+    }
+
+    function cerrarCarrito() {
+      document.getElementById("carrito").style.display = "none";
+    }
+
+    function vaciarCarrito() {
+      carrito = [];
+      actualizarCarrito();
+      cerrarCarrito();
+    }
+
+    function enviarWhatsApp() {
+      const nombre = document.getElementById("nombreCliente").value || "Cliente";
+      let total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+      let mensaje = `🧾 *Pedido de ${nombre}*%0A%0A`;
+      carrito.forEach(p => mensaje += `🔹 ${p.nombre} x${p.cantidad} - Q${(p.precio * p.cantidad).toFixed(2)}%0A`);
+
+      let envio = 0;
+      if (total < 150) {
+        envio = 15;
+        mensaje += `%0A🚚 Envío: Q15.00 (aplica por compras menores de Q150)`;
+      } else {
+        mensaje += `%0A🚚 Envío GRATIS ✅`;
+      }
+
+      mensaje += `%0A*Total a pagar:* Q${(total + envio).toFixed(2)}`;
+      const url = `https://wa.me/${telefono}?text=${mensaje}`;
+      window.open(url, "_blank");
+    }
+  </script>
+</body>
+</html>
+
