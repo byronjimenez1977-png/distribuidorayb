@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Distribuidora A & B</title>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: linear-gradient(180deg, #dff9ff 0%, #c7f5e9 100%);
+      overflow-x: hidden;
+    }
+
+    /* ==== BURBUJAS ANIMADAS ==== */
+    .bubble {
+      position: absolute;
+      bottom: -150px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      animation: subir 15s infinite ease-in;
+    }
+
+    @keyframes subir {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+    }
+
+    /* ==== ENCABEZADO ==== */
+    header {
+      text-align: center;
+      color: white;
+      background: linear-gradient(to right, #2196F3, #00BCD4);
+      padding: 60px 20px;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 2.8em;
+      margin: 0;
+    }
+
+    header p {
+      font-size: 1.1em;
+      margin: 10px 0 0;
+    }
+
+    /* ==== LOGO FLOTANTE ==== */
+    .logo {
+      position: absolute;
+      top: 15px;
+      left: 25px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: white;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo img {
+      width: 90%;
+      height: 90%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .aviso {
+      background-color: #43a047;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-weight: bold;
+      z-index: 2;
+      position: relative;
+    }
+
+    .intro {
+      text-align: center;
+      background-color: white;
+      margin: 25px auto;
+      padding: 25px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 2;
+    }
+
+    .promo {
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: white;
+      background-color: orange;
+      padding: 12px;
+      margin: 15px auto;
+      width: 90%;
+      border-radius: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .productos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      width: 90%;
+      margin: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .producto {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      text-align: center;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .producto:hover { transform: scale(1.05); }
+
+    .producto img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+    }
+
+    .producto h3 {
+      color: #0074d9;
+      margin: 10px 0 5px;
+    }
+
+    .producto p {
+      font-weight: bold;
+      margin: 0 0 10px;
+    }
+
+    .btn-agregar {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      padding: 9px 15px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-agregar:hover {
+      background-color: #1ebe5d;
+    }
+
+    /* === BOTÓN CARRITO FLOTANTE === */
+    .carrito-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-size: 16px;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 999;
+      animation: parpadeo 1.5s infinite;
+    }
+
+    @keyframes parpadeo {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    /* === MODAL DEL CARRITO === */
+    .carrito-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    .carrito-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
+    }
+
+    .carrito-item img {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+
+    .cerrar {
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    input[type="number"], input[type="text"] {
+      padding: 6px;
+      width: 65px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Logo flotante -->
+  <div class="logo">
+    <img src="logoAB.png" alt="Logo A&B">
+  </div>
+
+  <header>
+    <h1>Distribuidora A & B</h1>
+    <p>Pedidos rápidos y fáciles por WhatsApp 🛒</p>
+  </header>
+
+  <div class="aviso">
+    🚚 Entrega GRATIS por compras mayores de Q150 <br>
+    💵 Pedidos menores tienen un costo de envío de Q15 dentro de Huehuetenango
+  </div>
+
+  <div class="intro">
+    <h2>¡Bienvenidos a Distribuidora A & B!</h2>
+    <p>Te invitamos a conocer y probar nuestros productos de limpieza <b>MAX Oxy</b>, elaborados con excelente calidad y a precios accesibles. 📍 Estamos ubicados en <b>Mercado Las Victorias, Local No. 44, Zona 5, Huehuetenango.</b></p>
+  </div>
+
+  <div class="promo">💥 ¡A mayoristas precios especiales! 💰</div>
+
+  <div class="productos" id="productos"></div>
+
+  <a href="#" id="btnCarrito" class="carrito-btn">🛒 Ver carrito</a>
+
+  <div id="carritoModal" class="carrito-modal">
+    <h3>🛍 Tu pedido</h3>
+    <div id="carritoItems"></div>
+    <p><b>Total:</b> Q<span id="carritoTotal">0.00</span></p>
+    <input type="text" id="nombreCliente" placeholder="Tu nombre" style="width: 90%; margin-bottom: 10px;">
+    <br>
+    <button class="btn-agregar" id="btnEnviar">Enviar por WhatsApp</button>
+    <button class="cerrar" id="btnCerrar">Cerrar</button>
+  </div>
+
+  <!-- BURBUJAS -->
+  <script>
+    for (let i = 0; i < 15; i++) {
+      const bubble = document.createElement("div");
+      bubble.classList.add("bubble");
+      const size = Math.random() * 60 + 20;
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.left = `${Math.random() * 100}%`;
+      bubble.style.animationDuration = `${10 + Math.random() * 10}s`;
+      bubble.style.animationDelay = `${Math.random() * 5}s`;
+      document.body.appendChild(bubble);
+    }
+  </script>
+
+  <!-- LÓGICA DEL CARRITO -->
+  <script>
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesaBrL74caLRyCnPuBVAMWUSHzfyUelxzclArKYz0H1x6HY5gC0hL3ZPGqkJQbAxsU4D/pub?output=csv";
+    let carrito = [];
+
+    fetch(sheetURL)
+      .then(res => res.text())
+      .then(data => {
+        const rows = data.split("\n").slice(1);
+        const contenedor = document.getElementById("productos");
+        contenedor.innerHTML = "";
+
+        rows.forEach(row => {
+          const cols = row.split(",");
+          if (cols.length >= 4 && cols[1] && cols[2] && cols[3]) {
+            const nombre = cols[1].replace(/"/g, '');
+            const precio = parseFloat(cols[2]);
+            const imagen = cols[3].trim();
+
+            const card = `
+              <div class="producto">
+                <img src="${imagen}" alt="${nombre}" />
+                <h3>${nombre}</h3>
+                <p>Q${precio.toFixed(2)}</p>
+                <input type="number" min="1" value="1" id="qty-${nombre}" />
+                <button class="btn-agregar" onclick="agregarAlCarrito('${nombre}', ${precio}, '${imagen}')">Agregar</button>
+              </div>`;
+            contenedor.innerHTML += card;
+          }
+        });
+      });
+
+    function agregarAlCarrito(nombre, precio, imagen) {
+      const qty = parseInt(document.getElementById(`qty-${nombre}`).value) || 1;
+      const item = carrito.find(p => p.nombre === nombre);
+      if (item) item.cantidad += qty;
+      else carrito.push({ nombre, precio, cantidad: qty, imagen });
+      actualizarBotonCarrito();
+    }
+
+    function actualizarBotonCarrito() {
+      const btn = document.getElementById("btnCarrito");
+      const totalItems = carrito.reduce((acc, p) => acc + p.cantidad, 0);
+      const totalQ = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+      if (totalItems > 0) {
+        btn.innerText = `🛒 Ver carrito (${totalItems}) — Q${totalQ.toFixed(2)}`;
+        btn.style.display = "flex";
+      } else btn.style.display = "none";
+    }
+
+    document.getElementById("btnCarrito").onclick = () => {
+      const modal = document.getElementById("carritoModal");
+      const itemsDiv = document.getElementById("carritoItems");
+      const totalSpan = document.getElementById("carritoTotal");
+
+      itemsDiv.innerHTML = "";
+      carrito.forEach(item => {
+        itemsDiv.innerHTML += `
+          <div class="carrito-item">
+            <img src="${item.imagen}" alt="">
+            <span>${item.nombre} x${item.cantidad}</span>
+            <span>Q${(item.precio * item.cantidad).toFixed(2)}</span>
+          </div>`;
+      });
+
+      totalSpan.textContent = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0).toFixed(2);
+      modal.style.display = "block";
+    };
+
+    document.getElementById("btnCerrar").onclick = () => {
+      document.getElementById("carritoModal").style.display = "none";
+    };
+
+    document.getElementById("btnEnviar").onclick = () => {
+      const nombre = document.getElementById("nombreCliente").value.trim() || "Cliente";
+      const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+      let mensaje = `Hola, soy ${nombre}. Quiero realizar el siguiente pedido:%0A%0A`;
+      carrito.forEach(item => {
+        mensaje += `- ${item.nombre} x${item.cantidad} (Q${item.precio})%0A`;
+      });
+      mensaje += `%0A💵 Total: Q${total.toFixed(2)}%0A🚚 Envío dentro de Huehuetenango.`;
+      window.open(`https://wa.me/50247111160?text=${mensaje}`, "_blank");
+    };
+  </script>
+</body>
+</html>
+
