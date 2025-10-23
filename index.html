@@ -142,7 +142,7 @@ async function cargarProductos() {
     if (c.length >= 4) {
       const nombre = c[1].replace(/"/g, "").trim();
       const precio = c[2].trim();
-      let imagen = c[3].trim();
+      let imagen = c[4].trim();
 
       // 🔧 FIX IMPORTANTE:
       // Si el link tiene comillas o espacios, los eliminamos
@@ -169,3 +169,4 @@ cargarProductos();
 
 </body>
 </html>
+
