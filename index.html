@@ -1,297 +1,160 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Distribuidora A & B</title>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to bottom, #ccefff, #ffffff);
-      overflow-x: hidden;
-    }
-
-    @keyframes burbujas {
-      0% { transform: translateY(0); opacity: 0.8; }
-      100% { transform: translateY(-100vh); opacity: 0; }
-    }
-
-    @keyframes aparecer {
-      0% { opacity: 0; transform: translateY(40px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    .burbuja {
-      position: absolute;
-      bottom: 0;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      animation: burbujas 10s linear infinite;
-    }
-
-    header {
-      background: linear-gradient(to right, #007bff, #00c6ff);
-      color: white;
-      text-align: center;
-      padding: 40px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    header img {
-      position: absolute;
-      left: 20px;
-      top: 20px;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: white;
-    }
-
-    header h1 {
-      font-size: 2.5em;
-      margin: 0;
-    }
-
-    header p {
-      font-size: 1.1em;
-      margin-top: 10px;
-    }
-
-    .envio {
-      background: #34a853;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      font-weight: bold;
-      font-size: 1.1em;
-    }
-
-    .filtros {
-      text-align: center;
-      margin: 20px auto;
-      width: 90%;
-    }
-
-    .filtros input, .filtros select {
-      padding: 10px;
-      font-size: 1em;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      margin: 5px;
-      width: 200px;
-    }
-
-    .promo {
-      text-align: center;
-      font-size: 1.2em;
-      font-weight: bold;
-      color: white;
-      background-color: orange;
-      padding: 10px;
-      margin: 15px auto;
-      width: 90%;
-      border-radius: 10px;
-    }
-
-    .intro {
-      text-align: center;
-      background-color: white;
-      margin: 20px auto;
-      padding: 20px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 800px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .productos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      padding: 20px;
-      width: 90%;
-      margin: auto;
-    }
-
-    .producto {
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      overflow: hidden;
-      padding-bottom: 15px;
-      opacity: 0;
-      transform: translateY(40px);
-      animation: aparecer 0.7s ease forwards;
-    }
-
-    .producto img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-
-    .producto h3 {
-      color: #004aad;
-    }
-
-    .producto p {
-      color: #222;
-      font-weight: bold;
-    }
-
-    .btn-whatsapp {
-      background-color: #25D366;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      display: inline-block;
-      margin-top: 8px;
-      transition: background 0.2s;
-    }
-
-    .btn-whatsapp:hover {
-      background-color: #1ebe5d;
-    }
-
-    .whatsapp-fixed {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #25D366;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 50px;
-      font-size: 16px;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-    }
-
-    .whatsapp-fixed img {
-      width: 22px;
-      height: 22px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Distribuidora A & B</title>
+<style>
+body {
+  font-family:'Poppins',sans-serif;
+  margin:0;padding:0;
+  background:linear-gradient(to bottom,#ccefff,#ffffff);
+}
+header {
+  background:linear-gradient(to right,#007bff,#00c6ff);
+  color:white;text-align:center;
+  padding:40px 20px;position:relative;
+}
+header img{
+  position:absolute;left:20px;top:20px;width:80px;height:80px;border-radius:50%;
+  background:white;object-fit:cover;
+}
+.envio{
+  background:#34a853;color:white;text-align:center;padding:15px;font-weight:bold;
+}
+.promo{
+  text-align:center;color:white;background:orange;padding:10px;margin:15px auto;
+  width:90%;border-radius:10px;font-weight:bold;
+}
+.intro{
+  text-align:center;background:white;margin:20px auto;padding:20px;border-radius:12px;
+  width:90%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+.filtros{text-align:center;margin:10px;}
+.filtros input,.filtros select{
+  padding:8px;border:1px solid #ccc;border-radius:8px;margin:5px;
+}
+.productos{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;padding:20px;width:90%;margin:auto;
+}
+.producto{
+  background:white;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);
+  text-align:center;overflow:hidden;padding-bottom:15px;animation:fadein .7s ease forwards;
+}
+@keyframes fadein{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.producto img{width:100%;height:200px;object-fit:cover;}
+.btn-whatsapp{
+  background:#25D366;color:white;padding:8px 12px;border-radius:8px;text-decoration:none;
+  font-weight:bold;display:inline-block;margin-top:8px;
+}
+.btn-whatsapp:hover{background:#1ebe5d;}
+.whatsapp-fixed{
+  position:fixed;bottom:20px;right:20px;background:#25D366;color:white;
+  padding:12px 18px;border-radius:50px;text-decoration:none;font-size:16px;
+  box-shadow:0 4px 8px rgba(0,0,0,0.2);display:flex;align-items:center;gap:8px;
+}
+</style>
 </head>
 <body>
-  <header>
-    <img src="logoAB.png" alt="Logo A&B" />
-    <h1>Distribuidora A & B</h1>
-    <p>Pedidos rápidos y fáciles por WhatsApp 🛒</p>
-  </header>
+<header>
+  <img src="logoAB.png" alt="Logo A&B">
+  <h1>Distribuidora A & B</h1>
+  <p>Pedidos rápidos y fáciles por WhatsApp 🛒</p>
+</header>
 
-  <div class="envio">
-    🚚 Entrega GRATIS por compras mayores de Q150<br>
-    💵 Pedidos menores tienen un costo de envío de Q15 dentro de Huehuetenango
-  </div>
+<div class="envio">🚚 Entrega GRATIS por compras mayores de Q150<br>💵 Pedidos menores Q15 dentro de Huehuetenango</div>
 
-  <div class="intro">
-    <h2>¡Bienvenidos a Distribuidora A & B!</h2>
-    <p>Te invitamos a conocer y probar nuestros productos de limpieza <b>MAX Oxy</b>, elaborados con excelente calidad y a precios accesibles. 📍 Estamos ubicados en <b>Mercado Las Victorias, Local No. 44, Zona 5, Huehuetenango.</b></p>
-  </div>
+<div class="intro">
+  <h2>¡Bienvenidos a Distribuidora A & B!</h2>
+  <p>Productos de limpieza <b>MAX Oxy</b> con calidad y precios accesibles.<br>
+  📍 Mercado Las Victorias, Local No. 44 Zona 5 Huehuetenango.</p>
+</div>
 
-  <div class="promo">💥 ¡A mayoristas precios especiales! 💰</div>
+<div class="promo">💥 ¡A mayoristas precios especiales! 💰</div>
 
-  <div class="filtros">
-    <input type="text" id="busqueda" placeholder="Buscar producto..." />
-    <select id="categoria">
-      <option value="">Todas las categorías</option>
-    </select>
-  </div>
+<div class="filtros">
+  <input type="text" id="busqueda" placeholder="Buscar producto...">
+  <select id="categoria"><option value="">Todas las categorías</option></select>
+</div>
 
-  <div class="productos" id="productos"></div>
+<div id="productos" class="productos"></div>
 
-  <a href="https://wa.me/50247111160" target="_blank" class="whatsapp-fixed">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" /> Hacer pedido ahora
-  </a>
+<a href="https://wa.me/50247111160" target="_blank" class="whatsapp-fixed">
+  💬 Hacer pedido ahora
+</a>
 
-  <script>
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesaBrL74caLRyCnPuBVAMWUSHzfyUelxzclArKYz0H1x6HY5gC0hL3ZPGqkJQbAxsU4D/pub?output=csv";
-    let productos = [];
+<script>
+const sheetURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesaBrL74caLRyCnPuBVAMWUSHzfyUelxzclArKYz0H1x6HY5gC0hL3ZPGqkJQbAxsU4D/pub?output=csv";
+let productos=[];
 
-    function mostrarProductos(filtroTexto = "", filtroCategoria = "") {
-      const contenedor = document.getElementById("productos");
-      contenedor.innerHTML = "";
+function normalizarImagen(link){
+  // si ya viene correcto, lo usamos
+  if(link.includes("drive.google.com/uc?id=")) return link.trim();
+  // si viene como /file/d/ID/view
+  if(link.includes("/file/d/")){
+    const id=link.split("/file/d/")[1].split("/")[0];
+    return "https://drive.google.com/uc?id="+id;
+  }
+  // si viene como download?id=...
+  if(link.includes("download?id=")){
+    const id=link.split("download?id=")[1].split("&")[0];
+    return "https://drive.google.com/uc?id="+id;
+  }
+  return link.trim();
+}
 
-      const filtrados = productos.filter(p => {
-        const coincideTexto = p.nombre.toLowerCase().includes(filtroTexto.toLowerCase());
-        const coincideCategoria = filtroCategoria === "" || p.categoria === filtroCategoria;
-        return coincideTexto && coincideCategoria;
-      });
+function mostrarProductos(txt="",cat=""){
+  const cont=document.getElementById("productos");
+  cont.innerHTML="";
+  const filtrados=productos.filter(p=>{
+    const matchTxt=p.nombre.toLowerCase().includes(txt.toLowerCase());
+    const matchCat=cat===""||p.categoria===cat;
+    return matchTxt&&matchCat;
+  });
+  filtrados.forEach(p=>{
+    const div=document.createElement("div");
+    div.className="producto";
+    div.innerHTML=`
+      <img src="${p.imagen}" onerror="this.src='encabezado.png';">
+      <h3>${p.nombre}</h3>
+      <p>Q${p.precio}</p>
+      <a class="btn-whatsapp" href="https://wa.me/50247111160?text=Hola%20quiero%20${encodeURIComponent(p.nombre)}%20(Q${p.precio})" target="_blank">🛒 Pedir por WhatsApp</a>
+    `;
+    cont.appendChild(div);
+  });
+}
 
-      filtrados.forEach((p, index) => {
-        const card = document.createElement("div");
-        card.className = "producto";
-        card.style.animationDelay = `${index * 0.2}s`;
-        card.innerHTML = `
-          <img src="${p.imagen}" alt="${p.nombre}" onerror="this.src='encabezado.png';">
-          <h3>${p.nombre}</h3>
-          <p>Q${p.precio}</p>
-          <a class="btn-whatsapp" href="https://wa.me/50247111160?text=Hola%20quiero%20pedir%20${encodeURIComponent(p.nombre)}%20(Q${p.precio})" target="_blank">🛒 Pedir por WhatsApp</a>
-        `;
-        contenedor.appendChild(card);
-      });
+fetch(sheetURL)
+.then(r=>r.text())
+.then(t=>{
+  const rows=t.split("\n").slice(1);
+  const cats=new Set();
+  rows.forEach(r=>{
+    const c=r.includes(";")?r.split(";"):r.split(",");
+    if(c.length>=4){
+      const categoria=c[0].trim();
+      const nombre=c[1].replace(/"/g,"").trim();
+      const precio=c[2].trim();
+      const imagen=normalizarImagen(c[3]);
+      productos.push({categoria,nombre,precio,imagen});
+      if(categoria)cats.add(categoria);
     }
+  });
+  const sel=document.getElementById("categoria");
+  cats.forEach(ct=>{
+    const o=document.createElement("option");
+    o.value=ct;o.textContent=ct;sel.appendChild(o);
+  });
+  mostrarProductos();
+});
 
-    fetch(sheetURL)
-      .then(res => res.text())
-      .then(data => {
-        const rows = data.split("\n").slice(1);
-        const categorias = new Set();
-        productos = [];
-
-        rows.forEach(row => {
-          const cols = row.includes(";") ? row.split(";") : row.split(",");
-          if (cols.length >= 5) {
-            const categoria = cols[0].trim();
-            const nombre = cols[1].replace(/"/g, "").trim();
-            const precio = cols[2].trim();
-            const imagen = cols[3].trim();
-
-            productos.push({ categoria, nombre, precio, imagen });
-            if (categoria) categorias.add(categoria);
-          }
-        });
-
-        const selectCat = document.getElementById("categoria");
-        categorias.forEach(cat => {
-          const opt = document.createElement("option");
-          opt.value = cat;
-          opt.textContent = cat;
-          selectCat.appendChild(opt);
-        });
-
-        mostrarProductos();
-      });
-
-    document.getElementById("busqueda").addEventListener("input", e => {
-      mostrarProductos(e.target.value, document.getElementById("categoria").value);
-    });
-
-    document.getElementById("categoria").addEventListener("change", e => {
-      mostrarProductos(document.getElementById("busqueda").value, e.target.value);
-    });
-
-    for (let i = 0; i < 12; i++) {
-      const burbuja = document.createElement("div");
-      burbuja.classList.add("burbuja");
-      const size = Math.random() * 60 + 20;
-      burbuja.style.width = `${size}px`;
-      burbuja.style.height = `${size}px`;
-      burbuja.style.left = `${Math.random() * 100}vw`;
-      burbuja.style.animationDuration = `${8 + Math.random() * 4}s`;
-      document.body.appendChild(burbuja);
-    }
-  </script>
+document.getElementById("busqueda").addEventListener("input",e=>{
+  mostrarProductos(e.target.value,document.getElementById("categoria").value);
+});
+document.getElementById("categoria").addEventListener("change",e=>{
+  mostrarProductos(document.getElementById("busqueda").value,e.target.value);
+});
+</script>
 </body>
 </html>
