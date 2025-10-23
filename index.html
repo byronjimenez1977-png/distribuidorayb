@@ -7,7 +7,7 @@
 <style>
   body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(to bottom, #e3f8ff, #ffffff);
+    background: linear-gradient(to bottom, #ccefff, #ffffff);
     margin: 0;
   }
 
@@ -15,23 +15,26 @@
     background: linear-gradient(to right, #007bff, #00c6ff);
     color: white;
     text-align: center;
-    padding: 35px 15px;
-  }
-
-  h1 {
-    margin: 0;
-    font-size: 2rem;
+    padding: 30px 15px;
   }
 
   .intro {
-    text-align: center;
     background: white;
-    margin: 20px auto;
-    padding: 15px;
-    border-radius: 10px;
+    text-align: center;
     width: 90%;
     max-width: 800px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .aviso {
+    background: #ffa500;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
   }
 
   .productos {
@@ -39,63 +42,65 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 25px;
-    padding: 25px;
+    padding: 20px;
   }
 
   .card {
-    width: 260px;
-    border-radius: 20px;
-    background: #fff;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    overflow: hidden;
+    width: 250px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     text-align: center;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .card:hover {
     transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
   }
 
   .card img {
     width: 100%;
     height: 200px;
     object-fit: cover;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
   }
 
-  .nombre {
-    font-weight: 600;
-    margin-top: 10px;
+  .card.loaded img {
+    opacity: 1;
+    transform: translateY(0);
   }
 
-  .precio {
-    color: #333;
-    font-size: 1.1rem;
-    margin: 5px 0;
-  }
+  .nombre { font-weight: 600; margin-top: 10px; }
+  .precio { color: #333; margin: 5px 0; }
 
-  .whatsapp {
-    display: inline-block;
+  .btn {
     background: #25D366;
     color: white;
     text-decoration: none;
     padding: 8px 16px;
     border-radius: 20px;
-    margin-bottom: 15px;
+    display: inline-block;
+    margin-bottom: 10px;
   }
 
-  .whatsapp:hover {
+  .btn:hover {
     background: #1ebe5d;
   }
 
-  .aviso-envio {
-    background: #ffae00;
-    color: white;
-    font-weight: bold;
+  footer {
+    background: #f2f2f2;
     text-align: center;
-    padding: 12px;
-    margin: 10px 0 0;
-    font-size: 1.1rem;
+    padding: 15px;
+    margin-top: 30px;
+    color: #444;
+    font-size: 0.9em;
   }
+
 </style>
 </head>
 <body>
@@ -106,52 +111,54 @@
 </header>
 
 <div class="intro">
-  <p>🧴 ¡Bienvenido a Distribuidora A & B! Conocé nuestros productos de limpieza de calidad premium, elaborados con esmero para tu hogar y negocio.  
-  📍 Estamos ubicados en <b>Mercado Las Victorias, Local No. 44, Zona 5, Huehuetenango</b>.</p>
+  🧴 ¡Bienvenido a Distribuidora A & B!  
+  Conocé nuestros productos elaborados con esmero para tu hogar y negocio.  
+  📍 Mercado Las Victorias, Local No. 44, Zona 5, Huehuetenango.
 </div>
 
-<div class="aviso-envio">
-  🚚 Entrega GRATIS en compras mayores de Q150 — Pedidos menores, costo de envío Q15 en toda la ciudad de Huehuetenango.
+<div class="aviso">
+  🚚 Entrega GRATIS en compras mayores de Q150 — Pedidos menores, costo de envío Q15.
 </div>
 
-<div id="galeria" class="productos">Cargando productos...</div>
+<div id="productos" class="productos">Cargando productos...</div>
+
+<footer>
+  © Distribuidora A & B - Huehuetenango 2025
+</footer>
 
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesaBrL74caLRyCnPuBVAMWUSHzfyUelxzclArKYz0H1x6HY5gC0hL3ZPGqkJQbAxsU4D/pub?gid=0&single=true&output=csv";
-const whatsapp = "50247111160"; // ← tu número de WhatsApp
+const whatsapp = "50247111160"; // cambia si deseas otro número
 
 async function cargarProductos() {
-  try {
-    const res = await fetch(sheetURL);
-    const data = await res.text();
-    const filas = data.split("\n").slice(1);
-    const contenedor = document.getElementById("galeria");
-    contenedor.innerHTML = "";
+  const res = await fetch(sheetURL);
+  const data = await res.text();
+  const filas = data.split("\n").slice(1);
+  const cont = document.getElementById("productos");
+  cont.innerHTML = "";
 
-    filas.forEach(linea => {
-      const columnas = linea.split(",");
-      if (columnas.length >= 4) {
-        const nombre = columnas[1].replace(/"/g, "").trim();
-        const precio = columnas[2].trim();
-        const imagen = columnas[3].trim();
+  filas.forEach(f => {
+    const c = f.split(",");
+    if (c.length >= 4) {
+      const nombre = c[1].replace(/"/g, "").trim();
+      const precio = c[2].trim();
+      const imagen = c[3].trim();
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${imagen}" alt="${nombre}">
+        <div class="nombre">${nombre}</div>
+        <div class="precio">Q${precio}</div>
+        <a class="btn" href="https://wa.me/${whatsapp}?text=Hola,%20quiero%20pedir%20${encodeURIComponent(nombre)}%20(Q${precio})" target="_blank">Pedir por WhatsApp</a>
+      `;
+      cont.appendChild(card);
 
-        if (imagen.startsWith("http")) {
-          contenedor.innerHTML += `
-            <div class="card">
-              <img src="${imagen}" alt="${nombre}">
-              <div class="nombre">${nombre}</div>
-              <div class="precio">Q${precio}</div>
-              <a class="whatsapp" href="https://wa.me/${whatsapp}?text=Hola,%20quiero%20pedir%20${encodeURIComponent(nombre)}%20(Q${precio})" target="_blank">Pedir por WhatsApp</a>
-            </div>`;
-        }
-      }
-    });
-  } catch (error) {
-    console.error("Error al cargar productos:", error);
-    document.getElementById("galeria").innerHTML = "⚠️ Error al cargar los productos. Verificá tu hoja de cálculo.";
-  }
+      // efecto suave al cargar imagen
+      const img = card.querySelector("img");
+      img.onload = () => card.classList.add("loaded");
+    }
+  });
 }
-
 cargarProductos();
 </script>
 
