@@ -128,7 +128,7 @@
 
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesaBrL74caLRyCnPuBVAMWUSHzfyUelxzclArKYz0H1x6HY5gC0hL3ZPGqkJQbAxsU4D/pub?gid=0&single=true&output=csv";
-const whatsapp = "50247111160"; // cambia si deseas otro número
+const whatsapp = "50247111160"; // tu número
 
 async function cargarProductos() {
   const res = await fetch(sheetURL);
@@ -142,7 +142,12 @@ async function cargarProductos() {
     if (c.length >= 4) {
       const nombre = c[1].replace(/"/g, "").trim();
       const precio = c[2].trim();
-      const imagen = c[3].trim();
+      let imagen = c[3].trim();
+
+      // 🔧 FIX IMPORTANTE:
+      // Si el link tiene comillas o espacios, los eliminamos
+      imagen = imagen.replace(/['"]+/g, '').replace(/\s+/g, '');
+
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
@@ -153,12 +158,12 @@ async function cargarProductos() {
       `;
       cont.appendChild(card);
 
-      // efecto suave al cargar imagen
       const img = card.querySelector("img");
       img.onload = () => card.classList.add("loaded");
     }
   });
 }
+
 cargarProductos();
 </script>
 
