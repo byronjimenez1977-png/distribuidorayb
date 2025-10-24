@@ -18,51 +18,61 @@
 <style>
   :root{--azul1:#007bff;--azul2:#00c6ff;--verde:#25D366;--rojo:#c00;--sombra:0 4px 12px rgba(0,0,0,.12)}
   *{box-sizing:border-box}
+  
+  /* =================================================================
+   * CAMBIO 1: El body ya NO tiene el degradado.
+   * ================================================================= */
   body{
     margin:0;
     font-family:'Poppins',sans-serif;
-    background:linear-gradient(to bottom,#ccefff,#ffffff);
+    background: #ccefff; /* Color sólido de fallback */
     margin-bottom:100px;
-    position: relative; /* Necesario para el z-index */
   }
+  /* =================================================================
+   * FIN CAMBIO 1
+   * ================================================================= */
+
 
   /* =================================================================
-   * INICIO: NUEVO (Fondo de Burbujas)
+   * CAMBIO 2: El degradado se AÑADE a las burbujas.
    * ================================================================= */
   .burbujas-fondo {
-    position: fixed; /* Fijo para que se quede en el fondo */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    z-index: 0; /* Capa 0 (el fondo) */
+    z-index: 0; 
+    /* El degradado ahora está AQUÍ */
+    background: linear-gradient(to bottom,#ccefff,#ffffff);
   }
+  /* =================================================================
+   * FIN CAMBIO 2
+   * ================================================================= */
 
   .burbujas-fondo span {
     position: absolute;
-    bottom: -100px; /* Empezar abajo, fuera de la pantalla */
+    bottom: -100px; 
     width: 40px;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.18); /* Color de burbuja */
+    background-color: rgba(255, 255, 255, 0.18); 
     border-radius: 50%;
     animation: animarBurbujas 20s linear infinite;
     opacity: 0.8;
   }
 
-  /* Keyframes para la animación de subir */
   @keyframes animarBurbujas {
     0% {
       transform: translateY(0);
       opacity: 0.7;
     }
     100% {
-      transform: translateY(-120vh); /* Mover hasta arriba y fuera */
+      transform: translateY(-120vh); 
       opacity: 0;
     }
   }
 
-  /* Variaciones de tamaño, velocidad y posición */
   .burbujas-fondo span:nth-child(1) { left: 10%; animation-duration: 25s; animation-delay: 2s; width: 20px; height: 20px; }
   .burbujas-fondo span:nth-child(2) { left: 80%; animation-duration: 18s; animation-delay: 0s; width: 50px; height: 50px; }
   .burbujas-fondo span:nth-child(3) { left: 30%; animation-duration: 22s; animation-delay: 5s; width: 35px; height: 35px; }
@@ -71,10 +81,7 @@
   .burbujas-fondo span:nth-child(6) { left: 90%; animation-duration: 15s; animation-delay: 4s; width: 25px; height: 25px; }
   .burbujas-fondo span:nth-child(7) { left: 20%; animation-duration: 23s; animation-delay: 8s; width: 30px; height: 30px; }
   .burbujas-fondo span:nth-child(8) { left: 45%; animation-duration: 19s; animation-delay: 3s; width: 40px; height: 40px; }
-  /* =================================================================
-   * FIN: NUEVO (Fondo de Burbujas)
-   * ================================================================= */
-
+  
   /* --- Contenido Principal (Ajuste de Capas) --- */
   /* Todos estos elementos deben estar por ENCIMA de las burbujas */
   header, .intro, .aviso, #filtros-categorias, #productos, footer {
@@ -88,10 +95,7 @@
   .intro{background:#fff;border-radius:14px;box-shadow:var(--sombra);padding:16px 20px;margin:18px auto;max-width:820px;width:90%;text-align:center;font-size: 0.95rem;}
   .aviso{background:#ffa500;color:#fff;font-weight:700;text-align:center;padding:10px;margin:12px auto 0;max-width:980px;border-radius:10px}
   
-  /* Contenedor de productos */
   #productos{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;padding:22px}
-
-  /* Tarjeta de producto */
   .card{width:260px;background:#fff;border-radius:16px;box-shadow:var(--sombra);overflow:hidden;text-align:center;transition:.25s transform,.25s box-shadow}
   .card:hover{transform:translateY(-4px);box-shadow:0 10px 18px rgba(0,0,0,.16)}
   .imgwrap{position:relative;height:200px;background:#f2f6fb}
@@ -103,32 +107,25 @@
   .btn:hover{filter:brightness(.95)}
   footer{background:#f7f7f7;text-align:center;color:#555;font-size:.9rem;padding:12px;margin-top:8px}
 
-  /* Precios de Oferta */
   .precio-anterior{font-size: 0.9rem;color: #777;text-decoration: line-through;margin: -5px 0 2px;}
   .precio-oferta{font-weight: 700;color:var(--rojo);font-size: 1.15rem;margin: 0 0 10px;}
 
-  /* Mapa y Mayorista */
   .mapa-link-wrap{margin-top:16px}
   .btn-mapa{background:var(--azul1);color:white;padding:10px 15px;border-radius:8px;text-decoration:none;font-weight:600}
   .btn-mapa:hover{background:var(--azul2)}
   .mayorista {margin-top: 12px;font-weight: 600;color: var(--azul1);}
 
-  /* Estilos del Spinner de Carga */
   .spinner-wrap {display: flex;flex-direction: column;align-items: center;justify-content: center;padding: 40px;color: var(--azul1);font-weight: 600;}
   .spinner {width: 40px;height: 40px;border: 4px solid #f0f0f0;border-top: 4px solid var(--azul1);border-radius: 50%;animation: spin 1s linear infinite;margin-bottom: 10px;}
   @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-  /* Contenedor de Filtros */
   #filtros-categorias {text-align: center;padding: 10px 15px;flex-wrap: wrap;display: flex;justify-content: center;gap: 10px;}
   .btn-filtro {background-color: #f0f0f0;color: #444;border: none;padding: 8px 14px;border-radius: 20px;cursor: pointer;font-weight: 600;font-family: 'Poppins', sans-serif;transition: all 0.2s ease;}
   .btn-filtro:hover {background-color: #ddd;}
   .btn-filtro.active {background-color: var(--azul1);color: white;}
 
   /* --- CSS DEL CARRITO --- */
-  /* El z-index 999 lo pone por encima de todo, excepto el modal */
   #btn-flotante-carrito {position: fixed;bottom: 20px;right: 20px;background-color: var(--verde);color: white;padding: 12px 18px;border-radius: 50px;box-shadow: 0 4px 12px rgba(0,0,0,0.2);font-weight: 600;font-size: 1rem;cursor: pointer;z-index: 999;border: none;display: none;}
-  
-  /* El z-index 1000 lo pone por encima de todo */
   #modal-carrito {display: none; position: fixed; z-index: 1000; left: 0;top: 0;width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6);}
   .modal-contenido {background-color: #fefefe;margin: 15% auto; padding: 24px;border: 1px solid #888;border-radius: 12px;width: 90%;max-width: 500px;box-shadow: 0 5px 20px rgba(0,0,0,0.3);}
   .modal-header {display: flex;justify-content: space-between;align-items: center;border-bottom: 1px solid #eee;padding-bottom: 10px;}
@@ -159,6 +156,7 @@
   <span></span>
   <span></span>
 </div>
+
 <header>
   <h1>Distribuidora A & B</h1>
   <p>Productos de limpieza MAX Oxy con calidad y precios accesibles</p>
@@ -234,7 +232,7 @@ let contProductos, contFiltros;
 
 /* === UTILIDADES === */
 function trimAll(x){ return (x||"").toString().replace(/^\s+|\s+$/g,""); }
-function stripQuotes(x){ return (x||"").replace(/^"+|"+$/g,"").replace(/['“”]+/g,""); }
+function stripQuotes(x){ return (x_007c_007c"").replace(/^"+|"+$/g,"").replace(/['“”]+/g,""); }
 function extractDriveId(url){
   if(!url) return "";
   const u = stripQuotes(url).trim();
@@ -305,7 +303,7 @@ async function cargarProductos(){
     const categorias = new Set();
 
     data.forEach(r => {
-      const categoria = trimAll(stripQuotes(r[0]||"General")); // Columna A
+      const categoria = trimAll(stripQuotes(r[0]||"General")); 
       const nombre    = trimAll(stripQuotes(r[1]||""));
       const precioNormalStr  = trimAll(stripQuotes(r[2]||""));
       const precioOfertaStr  = trimAll(stripQuotes(r[5]||"")); 
@@ -489,7 +487,6 @@ function finalizarPedido() {
 
 /* === INICIALIZACIÓN === */
 document.addEventListener("DOMContentLoaded", () => {
-  // Asigna las variables globales a los elementos del DOM
   modal = document.getElementById("modal-carrito");
   btnFlotante = document.getElementById("btn-flotante-carrito");
   cartList = document.getElementById("cart-items");
