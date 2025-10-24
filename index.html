@@ -77,8 +77,12 @@ function extractDriveId(url){
   return "";
 }
 
-/* Genera 3 fuentes posibles y hace fallback si fallan */
-function buildImageWithFallback(id){
+/* * =================================================================
+ * INICIO DE LA CORRECCIÓN 1: Función buildImageWithFallback
+ * Ahora acepta 'onLoadCallback'
+ * =================================================================
+ */
+function buildImageWithFallback(id, onLoadCallback){
   if(!id) return null;
   const primary   = `https://drive.google.com/uc?export=view&id=${id}`;
   const fallback1 = `https://lh3.googleusercontent.com/d/${id}`; // alternativa estable
@@ -91,14 +95,32 @@ function buildImageWithFallback(id){
   // Creamos el elemento <img> con encadenamiento de fallbacks
   const img = document.createElement("img");
   let idx = 0;
-  img.src = seq[idx];
+
+  // **** ¡LA CORRECCIÓN ESTÁ AQUÍ! ****
+  // Asignamos los listeners ANTES de poner el src
+  img.onload = onLoadCallback; // Asignamos el callback que recibimos
+
   img.onerror = () => {
     idx++;
-    if(idx < seq.length) img.src = seq[idx];
-    else img.src = "https://via.placeholder.com/640x400?text=Imagen+no+disponible";
+    if(idx < seq.length) {
+      img.src = seq[idx]; // Intenta con el siguiente fallback
+    } else {
+      // Si todo falla, usa el placeholder.
+      // Esto disparará 'onload' (si placeholder.com funciona)
+      // y mostrará el texto de error.
+      img.src = "https://via.placeholder.com/640x400?text=Imagen+no+disponible";
+    }
   };
+  
+  // Asignamos el src AL FINAL, después de que los listeners estén listos
+  img.src = seq[idx];
   return img;
 }
+/* * =================================================================
+ * FIN DE LA CORRECCIÓN 1
+ * =================================================================
+ */
+
 
 /* Parser CSV simple (maneja comillas) */
 function parseCSV(text){
@@ -147,24 +169,41 @@ async function cargarProductos(){
       const imgWrap = document.createElement("div");
       imgWrap.className = "imgwrap";
 
-      const imgEl = buildImageWithFallback(id || urlRaw);
+      /* * =================================================================
+       * INICIO DE LA CORRECCIÓN 2: Cómo se llama a la función
+       * =================================================================
+       */
+      
+      // 1. Define la función de callback primero
+      const onImageLoaded = () => {
+        card.classList.add("loaded");
+      };
+
+      // 2. Pasa el ID y el callback a la función
+      const imgEl = buildImageWithFallback(id || urlRaw, onImageLoaded);
+
       if(imgEl){
-        imgEl.onload = () => card.classList.add("loaded");
+        // 3. Simplemente añade la imagen. El 'onload' ya fue asignado dentro de la función.
         imgWrap.appendChild(imgEl);
       }else{
         // si no logramos ID ni URL válida, placeholder
         const ph = document.createElement("img");
         ph.src = "https://via.placeholder.com/640x400?text=Imagen+no+disponible";
         imgWrap.appendChild(ph);
+        card.classList.add("loaded"); // Carga la tarjeta de todos modos para ver el placeholder
       }
+      /* * =================================================================
+       * FIN DE LA CORRECCIÓN 2
+       * =================================================================
+       */
 
       card.appendChild(imgWrap);
       card.insertAdjacentHTML("beforeend", `
         <div class="nombre">${nombre}</div>
         <div class="precio">Q${precio}</div>
         <a class="btn" target="_blank"
-           href="https://wa.me/${whatsapp}?text=${encodeURIComponent(`Hola, quiero pedir ${nombre} (Q${precio})`)}">
-           Pedir por WhatsApp
+            href="https://wa.me/${whatsapp}?text=${encodeURIComponent(`Hola, quiero pedir ${nombre} (Q${precio})`)}">
+            Pedir por WhatsApp
         </a>
       `);
 
