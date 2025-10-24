@@ -24,7 +24,11 @@
   header p{margin:.3rem 0 0;opacity:.95}
   .intro{background:#fff;border-radius:14px;box-shadow:var(--sombra);padding:16px 20px;margin:18px auto;max-width:820px;width:90%;text-align:center;font-size: 0.95rem;}
   .aviso{background:#ffa500;color:#fff;font-weight:700;text-align:center;padding:10px;margin:12px auto 0;max-width:980px;border-radius:10px}
+  
+  /* Contenedor de productos */
   #productos{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;padding:22px}
+
+  /* Tarjeta de producto */
   .card{width:260px;background:#fff;border-radius:16px;box-shadow:var(--sombra);overflow:hidden;text-align:center;transition:.25s transform,.25s box-shadow}
   .card:hover{transform:translateY(-4px);box-shadow:0 10px 18px rgba(0,0,0,.16)}
   .imgwrap{position:relative;height:200px;background:#f2f6fb}
@@ -40,127 +44,89 @@
   .precio-anterior{font-size: 0.9rem;color: #777;text-decoration: line-through;margin: -5px 0 2px;}
   .precio-oferta{font-weight: 700;color:var(--rojo);font-size: 1.15rem;margin: 0 0 10px;}
 
-  /* Mapa */
+  /* Mapa y Mayorista */
   .mapa-link-wrap{margin-top:16px}
   .btn-mapa{background:var(--azul1);color:white;padding:10px 15px;border-radius:8px;text-decoration:none;font-weight:600}
   .btn-mapa:hover{background:var(--azul2)}
-  
   .mayorista {margin-top: 12px;font-weight: 600;color: var(--azul1);}
 
-  /* CSS DEL CARRITO DE COMPRAS */
+  /* =================================================================
+   * INICIO: NUEVO CSS (Spinner y Filtros)
+   * ================================================================= */
 
-  /* Botón flotante */
-  #btn-flotante-carrito {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: var(--verde);
-    color: white;
-    padding: 12px 18px;
-    border-radius: 50px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    z-index: 999;
-    border: none;
-    display: none; /* Oculto hasta que se añada algo */
-  }
-
-  /* Modal (Fondo oscuro) */
-  #modal-carrito {
-    display: none; 
-    position: fixed; 
-    z-index: 1000; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgba(0,0,0,0.6);
-  }
-
-  /* Contenido del Modal (Caja blanca) */
-  .modal-contenido {
-    background-color: #fefefe;
-    margin: 15% auto; 
-    padding: 24px;
-    border: 1px solid #888;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-  }
-
-  .modal-header {
+  /* Estilos del Spinner de Carga */
+  .spinner-wrap {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-  }
-  .modal-header h2 {
-    margin: 0;
+    justify-content: center;
+    padding: 40px;
     color: var(--azul1);
+    font-weight: 600;
   }
-  .modal-cerrar {
-    color: #aaa;
-    font-size: 32px;
-    font-weight: bold;
-    cursor: pointer;
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f0f0f0;
+    border-top: 4px solid var(--azul1);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
   }
-  .modal-cerrar:hover,
-  .modal-cerrar:focus {
-    color: #333;
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
-  
-  #cart-items {
-    list-style: none;
-    padding: 0;
-    margin-top: 15px;
-    max-height: 250px;
-    overflow-y: auto;
+
+  /* Contenedor de Filtros */
+  #filtros-categorias {
+    text-align: center;
+    padding: 10px 15px;
+    flex-wrap: wrap; /* Para que los botones se ajusten en móviles */
+    display: flex; /* Oculto por defecto, JS lo mostrará */
+    justify-content: center;
+    gap: 10px;
   }
-  .cart-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 4px;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 0.95rem;
-  }
-  .cart-item span {
-    flex-grow: 1;
-  }
-  .cart-item button {
-    background: none;
+  .btn-filtro {
+    background-color: #f0f0f0;
+    color: #444;
     border: none;
-    color: var(--rojo);
-    font-size: 1.2rem;
-    font-weight: bold;
+    padding: 8px 14px;
+    border-radius: 20px;
     cursor: pointer;
-    padding: 0 5px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.2s ease;
   }
-  
-  .cart-total {
-    text-align: right;
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-top: 20px;
-    color: #333;
+  .btn-filtro:hover {
+    background-color: #ddd;
   }
-  
-  .cart-acciones {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+  .btn-filtro.active {
+    background-color: var(--azul1);
+    color: white;
   }
-  .btn-vaciar {
-    background: #aaa;
-  }
-  .btn-vaciar:hover {
-    background: #888;
-  }
+
+  /* =================================================================
+   * FIN: NUEVO CSS
+   * ================================================================= */
+
+  /* --- CSS DEL CARRITO (Sin cambios) --- */
+  #btn-flotante-carrito {position: fixed;bottom: 20px;right: 20px;background-color: var(--verde);color: white;padding: 12px 18px;border-radius: 50px;box-shadow: 0 4px 12px rgba(0,0,0,0.2);font-weight: 600;font-size: 1rem;cursor: pointer;z-index: 999;border: none;display: none;}
+  #modal-carrito {display: none; position: fixed; z-index: 1000; left: 0;top: 0;width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6);}
+  .modal-contenido {background-color: #fefefe;margin: 15% auto; padding: 24px;border: 1px solid #888;border-radius: 12px;width: 90%;max-width: 500px;box-shadow: 0 5px 20px rgba(0,0,0,0.3);}
+  .modal-header {display: flex;justify-content: space-between;align-items: center;border-bottom: 1px solid #eee;padding-bottom: 10px;}
+  .modal-header h2 {margin: 0;color: var(--azul1);}
+  .modal-cerrar {color: #aaa;font-size: 32px;font-weight: bold;cursor: pointer;}
+  .modal-cerrar:hover,.modal-cerrar:focus {color: #333;}
+  #cart-items {list-style: none;padding: 0;margin-top: 15px;max-height: 250px;overflow-y: auto;}
+  .cart-item {display: flex;justify-content: space-between;align-items: center;padding: 8px 4px;border-bottom: 1px solid #f0f0f0;font-size: 0.95rem;}
+  .cart-item span {flex-grow: 1;}
+  .cart-item button {background: none;border: none;color: var(--rojo);font-size: 1.2rem;font-weight: bold;cursor: pointer;padding: 0 5px;}
+  .cart-total {text-align: right;font-size: 1.3rem;font-weight: 700;margin-top: 20px;color: #333;}
+  .cart-acciones {display: flex;justify-content: space-between;margin-top: 20px;}
+  .btn-vaciar {background: #aaa;}
+  .btn-vaciar:hover {background: #888;}
+  .btn:focus,.btn-mapa:focus,#btn-flotante-carrito:focus,.modal-cerrar:focus {outline: none;box-shadow: none;}
 
 </style>
 </head>
@@ -180,7 +146,7 @@
   </div>
   
   <div class="mapa-link-wrap">
-    <a href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.153716613385!2d-91.46747802580798!3d15.529323153545108!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x858c06e8b8a74eab%3A0x933095c517f7397c!2sMercado%20Las%20Victorias!5e0!3m2!1ses!2sgt!4v1729732560548!5m2!1ses!2sgt" 
+    <a href="http://googleusercontent.com/maps/google.com/1" 
        class="btn-mapa" 
        target="_blank">
        📍 Cómo llegar
@@ -193,35 +159,35 @@
   🚚 Entrega GRATIS en compras mayores de Q150 — Pedidos menores, costo de envío Q15 en toda la ciudad de Huehuetenango.
 </div>
 
-<div id="productos">Cargando productos…</div>
+<div id="filtros-categorias"></div>
 
+<div id="productos">
+  <div class="spinner-wrap">
+    <div class="spinner"></div>
+    <div>Cargando productos…</div>
+  </div>
+</div>
 <footer>© Distribuidora A & B - Huehuetenango 2025</footer>
 
 <button id="btn-flotante-carrito" onclick="mostrarCarrito()">
   🛒 Carrito (0) - Q0.00
 </button>
-
 <div id="modal-carrito">
   <div class="modal-contenido">
-    
     <div class="modal-header">
       <h2>Mi Pedido</h2>
       <span class="modal-cerrar" onclick="ocultarCarrito()">×</span>
     </div>
-    
     <ul id="cart-items">
       <li>Aún no tienes productos.</li>
     </ul>
-    
     <div id="cart-total" class="cart-total">
       Total: Q0.00
     </div>
-    
     <div class="cart-acciones">
       <button class="btn btn-vaciar" onclick="vaciarCarrito()">Vaciar Carrito</button>
       <button class="btn" onclick="finalizarPedido()">Finalizar Pedido (WhatsApp)</button>
     </div>
-    
   </div>
 </div>
 
@@ -235,12 +201,12 @@ const whatsapp = "50247111160";
 /* VARIABLES GLOBALES Y ELEMENTOS DEL CARRITO */
 let carrito = []; 
 let modal, btnFlotante, cartList, cartTotalEl;
+let contProductos, contFiltros; // Nuevas variables para contenedores
 
 
 /* === UTILIDADES === */
 function trimAll(x){ return (x||"").toString().replace(/^\s+|\s+$/g,""); }
 function stripQuotes(x){ return (x||"").replace(/^"+|"+$/g,"").replace(/['“”]+/g,""); }
-
 function extractDriveId(url){
   if(!url) return "";
   const u = stripQuotes(url).trim();
@@ -253,7 +219,6 @@ function extractDriveId(url){
   if(/^[a-zA-Z0-9_-]{25,}$/.test(u)) return u;
   return "";
 }
-
 function buildImageWithFallback(id, onLoadCallback){
   if(!id) return null;
   const primary   = `https://drive.google.com/uc?export=view&id=${id}`;
@@ -275,7 +240,6 @@ function buildImageWithFallback(id, onLoadCallback){
   img.src = seq[idx];
   return img;
 }
-
 function parseCSV(text){
   const rows = [];
   let row = [], cur = "", inQ = false;
@@ -299,20 +263,32 @@ function parseCSV(text){
 
 /* === CARGA DE PRODUCTOS === */
 async function cargarProductos(){
-  const cont = document.getElementById("productos");
   try{
     const res = await fetch(sheetURL, { cache: "no-store" });
     const text = await res.text();
     const matriz = parseCSV(text);
     const data = matriz.slice(1).filter(r => r && r.length);
 
-    cont.innerHTML = "";
+    // Selecciona el spinner y lo elimina
+    const spinner = contProductos.querySelector('.spinner-wrap');
+    if (spinner) {
+      spinner.remove();
+    }
+    
+    // Para guardar las categorías únicas
+    const categorias = new Set();
+
     data.forEach(r => {
+      // Columnas: A=0, B=1, C=2, D=3, E=4, F=5
+      const categoria = trimAll(stripQuotes(r[0]||"General")); // Columna A
       const nombre    = trimAll(stripQuotes(r[1]||""));
       const precioNormalStr  = trimAll(stripQuotes(r[2]||""));
       const precioOfertaStr  = trimAll(stripQuotes(r[5]||"")); 
       const urlRaw    = trimAll(stripQuotes(r[IMAGE_COL_INDEX]||""));
       const id        = extractDriveId(urlRaw);
+      
+      // Añade la categoría al Set (automáticamente maneja duplicados)
+      categorias.add(categoria);
 
       const precioNormalNum = parseFloat(precioNormalStr);
       const precioOfertaNum = parseFloat(precioOfertaStr);
@@ -333,15 +309,20 @@ async function cargarProductos(){
 
       const card = document.createElement("div");
       card.className = "card";
+      
+      // =================================================================
+      // NUEVO: Añade la categoría como un "data-attribute" a la tarjeta
+      card.dataset.categoria = categoria;
+      // =================================================================
+
       const imgWrap = document.createElement("div");
       imgWrap.className = "imgwrap";
 
       const onImageLoaded = () => card.classList.add("loaded");
       const imgEl = buildImageWithFallback(id || urlRaw, onImageLoaded);
 
-      if(imgEl){
-        imgWrap.appendChild(imgEl);
-      }else{
+      if(imgEl){ imgWrap.appendChild(imgEl); }
+      else{
         const ph = document.createElement("img");
         ph.src = "https://via.placeholder.com/640x400?text=Imagen+no+disponible";
         imgWrap.appendChild(ph);
@@ -358,66 +339,101 @@ async function cargarProductos(){
         </button>
       `);
 
-      cont.appendChild(card);
+      contProductos.appendChild(card);
     });
 
-    if(!cont.children.length){
-      cont.innerHTML = "<p>No se encontraron productos.</p>";
+    // Llama a la nueva función para crear los botones de filtro
+    renderizarFiltros(categorias);
+
+    if(!contProductos.children.length){
+      contProductos.innerHTML = "<p>No se encontraron productos.</p>";
     }
   }catch(e){
     console.error(e);
-    cont.innerHTML = "<p style='color:#c00'>No se pudieron cargar los productos.</p>";
+    contProductos.innerHTML = "<p style='color:#c00'>No se pudieron cargar los productos.</p>";
   }
 }
 
 /* =================================================================
- * INICIO: FUNCIONES DEL CARRITO
+ * INICIO: NUEVAS FUNCIONES (FILTROS)
  * ================================================================= */
 
-// Muestra el modal
-function mostrarCarrito() {
-  modal.style.display = "block";
+// Crea los botones de filtro en el HTML
+function renderizarFiltros(categoriasSet) {
+  // Convierte el Set a un Array y lo ordena alfabéticamente
+  const categorias = [...categoriasSet].sort();
+
+  // Botón "Ver Todos"
+  const btnTodos = document.createElement('button');
+  btnTodos.className = 'btn-filtro active'; // Activo por defecto
+  btnTodos.innerText = 'Ver Todos';
+  btnTodos.onclick = () => filtrarProductos('Todos');
+  contFiltros.appendChild(btnTodos);
+
+  // Botones para cada categoría
+  categorias.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-filtro';
+    btn.innerText = cat;
+    // Usamos comillas dentro de la función para pasar el string
+    btn.onclick = () => filtrarProductos(cat);
+    contFiltros.appendChild(btn);
+  });
 }
 
-// Oculta el modal
-function ocultarCarrito() {
-  modal.style.display = "none";
+// Muestra/Oculta productos según la categoría seleccionada
+function filtrarProductos(categoria) {
+  // 1. Maneja la clase "active" en los botones
+  const botones = contFiltros.querySelectorAll('.btn-filtro');
+  botones.forEach(btn => {
+    if (btn.innerText === categoria) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  // 2. Muestra/Oculta las tarjetas de productos
+  const cards = contProductos.querySelectorAll('.card');
+  cards.forEach(card => {
+    if (categoria === 'Todos' || card.dataset.categoria === categoria) {
+      card.style.display = 'block'; // Muestra la tarjeta
+    } else {
+      card.style.display = 'none'; // Oculta la tarjeta
+    }
+  });
 }
 
-// Añade un producto al carrito
+/* =================================================================
+ * FIN: NUEVAS FUNCIONES (FILTROS)
+ * ================================================================= */
+
+
+/* --- FUNCIONES DEL CARRITO (Sin cambios) --- */
+function mostrarCarrito() { modal.style.display = "block"; }
+function ocultarCarrito() { modal.style.display = "none"; }
+
 function agregarAlCarrito(nombre, precio) {
-  // Busca si el producto ya existe
   const itemExistente = carrito.find(item => item.nombre === nombre);
-  
   if (itemExistente) {
-    itemExistente.cantidad++; // Si existe, solo aumenta la cantidad
+    itemExistente.cantidad++; 
   } else {
-    // Si no existe, lo añade como nuevo objeto
-    carrito.push({
-      nombre: nombre,
-      precio: precio,
-      cantidad: 1
-    });
+    carrito.push({ nombre: nombre, precio: precio, cantidad: 1 });
   }
-  
   renderizarCarrito();
-  // mostrarCarrito(); // <-- ¡CAMBIO REALIZADO! Se quitó esta línea
 }
 
-// Elimina un producto del carrito (por su índice en el array)
 function eliminarDelCarrito(index) {
-  carrito.splice(index, 1); // Elimina el elemento en esa posición
+  carrito.splice(index, 1); 
   renderizarCarrito();
 }
 
-// Vacía todo el carrito
 function vaciarCarrito() {
   carrito = [];
   renderizarCarrito();
   ocultarCarrito();
 }
 
-// Dibuja el carrito y actualiza los totales
 function renderizarCarrito() {
   let total = 0;
   let totalItems = 0;
@@ -425,12 +441,11 @@ function renderizarCarrito() {
   if (carrito.length === 0) {
     cartList.innerHTML = "<li>Aún no tienes productos.</li>";
   } else {
-    cartList.innerHTML = ""; // Limpia la lista
+    cartList.innerHTML = ""; 
     carrito.forEach((item, index) => {
       const subtotal = item.precio * item.cantidad;
       total += subtotal;
       totalItems += item.cantidad;
-      
       const li = document.createElement("li");
       li.className = "cart-item";
       li.innerHTML = `
@@ -441,10 +456,8 @@ function renderizarCarrito() {
     });
   }
   
-  // Actualiza el texto del total en el modal
   cartTotalEl.innerText = `Total: Q${total.toFixed(2)}`;
   
-  // Actualiza el botón flotante
   if (totalItems > 0) {
     btnFlotante.innerHTML = `🛒 Carrito (${totalItems}) - Q${total.toFixed(2)}`;
     btnFlotante.style.display = "block";
@@ -453,24 +466,19 @@ function renderizarCarrito() {
   }
 }
 
-// Formatea el pedido y lo envía a WhatsApp
 function finalizarPedido() {
   if (carrito.length === 0) {
     alert("Tu carrito está vacío.");
     return;
   }
-  
   let mensaje = "Hola, quiero pedir lo siguiente:\n\n";
   let total = 0;
-  
   carrito.forEach(item => {
     const subtotal = item.precio * item.cantidad;
     mensaje += `${item.cantidad}x ${item.nombre} - Q${subtotal.toFixed(2)}\n`;
     total += subtotal;
   });
-  
   mensaje += `\n*Total a pagar: Q${total.toFixed(2)}*`;
-  
   const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(mensaje)}`;
   window.open(url, '_blank');
 }
@@ -483,18 +491,21 @@ document.addEventListener("DOMContentLoaded", () => {
   btnFlotante = document.getElementById("btn-flotante-carrito");
   cartList = document.getElementById("cart-items");
   cartTotalEl = document.getElementById("cart-total");
+  
+  // =================================================================
+  // NUEVO: Asigna los contenedores principales
+  contProductos = document.getElementById("productos");
+  contFiltros = document.getElementById("filtros-categorias");
+  // =================================================================
 
-  // Cierra el modal si se hace clic fuera del contenido
   window.onclick = function(event) {
     if (event.target == modal) {
       ocultarCarrito();
     }
   }
 
-  // Carga los productos desde la hoja de Google
   cargarProductos();
 });
-/* =F FIN: FUNCIONES DEL CARRITO */
 </script>
 </body>
 </html>
