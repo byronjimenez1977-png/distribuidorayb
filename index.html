@@ -19,23 +19,13 @@
   :root{--azul1:#007bff;--azul2:#00c6ff;--verde:#25D366;--rojo:#c00;--sombra:0 4px 12px rgba(0,0,0,.12)}
   *{box-sizing:border-box}
   
-  /* =================================================================
-   * CAMBIO 1: El body ya NO tiene el degradado.
-   * ================================================================= */
   body{
     margin:0;
     font-family:'Poppins',sans-serif;
     background: #ccefff; /* Color sólido de fallback */
     margin-bottom:100px;
   }
-  /* =================================================================
-   * FIN CAMBIO 1
-   * ================================================================= */
 
-
-  /* =================================================================
-   * CAMBIO 2: El degradado se AÑADE a las burbujas.
-   * ================================================================= */
   .burbujas-fondo {
     position: fixed; 
     top: 0;
@@ -44,12 +34,8 @@
     height: 100%;
     overflow: hidden;
     z-index: 0; 
-    /* El degradado ahora está AQUÍ */
     background: linear-gradient(to bottom,#ccefff,#ffffff);
   }
-  /* =================================================================
-   * FIN CAMBIO 2
-   * ================================================================= */
 
   .burbujas-fondo span {
     position: absolute;
@@ -60,17 +46,15 @@
     border-radius: 50%;
     animation: animarBurbujas 20s linear infinite;
     opacity: 0.8;
+    /* =================================================================
+     * MEJORA 3: Optimización de animación
+     * ================================================================= */
+    will-change: transform, opacity;
   }
 
   @keyframes animarBurbujas {
-    0% {
-      transform: translateY(0);
-      opacity: 0.7;
-    }
-    100% {
-      transform: translateY(-120vh); 
-      opacity: 0;
-    }
+    0% { transform: translateY(0); opacity: 0.7; }
+    100% { transform: translateY(-120vh); opacity: 0; }
   }
 
   .burbujas-fondo span:nth-child(1) { left: 10%; animation-duration: 25s; animation-delay: 2s; width: 20px; height: 20px; }
@@ -82,11 +66,10 @@
   .burbujas-fondo span:nth-child(7) { left: 20%; animation-duration: 23s; animation-delay: 8s; width: 30px; height: 30px; }
   .burbujas-fondo span:nth-child(8) { left: 45%; animation-duration: 19s; animation-delay: 3s; width: 40px; height: 40px; }
   
-  /* --- Contenido Principal (Ajuste de Capas) --- */
-  /* Todos estos elementos deben estar por ENCIMA de las burbujas */
+  /* --- Contenido Principal --- */
   header, .intro, .aviso, #filtros-categorias, #productos, footer {
     position: relative;
-    z-index: 2; /* Capa 2 (contenido) */
+    z-index: 2; 
   }
 
   header{background:linear-gradient(to right,var(--azul1),var(--azul2));color:#fff;text-align:center;padding:28px 16px}
@@ -147,14 +130,7 @@
 <body>
 
 <div class="burbujas-fondo">
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
 </div>
 
 <header>
@@ -165,19 +141,10 @@
 <div class="intro">
   🧴 Bienvenido a Distribuidora A & B. Conocé nuestros productos de limpieza de calidad premium.<br>
   📍 Mercado Las Victorias, Local No. 44, Zona 5, Huehuetenango.
-  
-  <div class="mayorista">
-    Precios especiales a clientes mayoristas
-  </div>
-  
+  <div class="mayorista">Precios especiales a clientes mayoristas</div>
   <div class="mapa-link-wrap">
-    <a href="http://googleusercontent.com/maps/google.com/1" 
-       class="btn-mapa" 
-       target="_blank">
-       📍 Cómo llegar
-    </a>
+    <a href="http://googleusercontent.com/maps/google.com/1" class="btn-mapa" target="_blank">📍 Cómo llegar</a>
   </div>
-
 </div>
 
 <div class="aviso">
@@ -195,21 +162,15 @@
 
 <footer>© Distribuidora A & B - Huehuetenango 2025</footer>
 
-<button id="btn-flotante-carrito" onclick="mostrarCarrito()">
-  🛒 Carrito (0) - Q0.00
-</button>
+<button id="btn-flotante-carrito" onclick="mostrarCarrito()">🛒 Carrito (0) - Q0.00</button>
 <div id="modal-carrito">
   <div class="modal-contenido">
     <div class="modal-header">
       <h2>Mi Pedido</h2>
       <span class="modal-cerrar" onclick="ocultarCarrito()">×</span>
     </div>
-    <ul id="cart-items">
-      <li>Aún no tienes productos.</li>
-    </ul>
-    <div id="cart-total" class="cart-total">
-      Total: Q0.00
-    </div>
+    <ul id="cart-items"><li>Aún no tienes productos.</li></ul>
+    <div id="cart-total" class="cart-total">Total: Q0.00</div>
     <div class="cart-acciones">
       <button class="btn btn-vaciar" onclick="vaciarCarrito()">Vaciar Carrito</button>
       <button class="btn" onclick="finalizarPedido()">Finalizar Pedido (WhatsApp)</button>
@@ -223,6 +184,7 @@
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesaBrL74caLRyCnPuBVAMWUSHzfyUelxzclArKYz0H1x6HY5gC0hL3ZPGqkJQbAxsU4D/pub?gid=0&single=true&output=csv";
 const IMAGE_COL_INDEX = 3; // 0=A, 1=B, 2=C, 3=D, 4=E
 const whatsapp = "50247111160";
+const CACHE_DURACION_MINUTOS = 30; // Tiempo que guarda los datos
 
 /* VARIABLES GLOBALES Y ELEMENTOS DEL DOM */
 let carrito = []; 
@@ -231,8 +193,10 @@ let contProductos, contFiltros;
 
 
 /* === UTILIDADES === */
-function trimAll(x){ return (x||"").toString().replace(/^\s+|\s+$/g,""); }
-function stripQuotes(x){ return (x_007c_007c"").replace(/^"+|"+$/g,"").replace(/['“”]+/g,""); }
+// Corregí un error en stripQuotes, (x||"") debe estar entre paréntesis
+function trimAll(x){ return (x || "").toString().replace(/^\s+|\s+$/g,""); }
+function stripQuotes(x){ return (x || "").replace(/^"+|"+$/g,"").replace(/['“”]+/g,""); }
+
 function extractDriveId(url){
   if(!url) return "";
   const u = stripQuotes(url).trim();
@@ -245,6 +209,7 @@ function extractDriveId(url){
   if(/^[a-zA-Z0-9_-]{25,}$/.test(u)) return u;
   return "";
 }
+
 function buildImageWithFallback(id, onLoadCallback){
   if(!id) return null;
   const primary   = `https://drive.google.com/uc?export=view&id=${id}`;
@@ -252,8 +217,10 @@ function buildImageWithFallback(id, onLoadCallback){
   const fallback2 = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
   const cb = `cb=${Date.now()}`;
   const seq = [primary, fallback1, fallback2].map(u => u + (u.includes("?") ? "&" : "?") + cb);
+  
   const img = document.createElement("img");
   let idx = 0;
+  
   img.onload = onLoadCallback;
   img.onerror = () => {
     idx++;
@@ -263,9 +230,16 @@ function buildImageWithFallback(id, onLoadCallback){
       img.src = "https://via.placeholder.com/640x400?text=Imagen+no+disponible";
     }
   };
+  
+  // =================================================================
+  // MEJORA 1: Carga Perezosa (Lazy Loading)
+  // =================================================================
+  img.loading = "lazy"; // <-- ¡ESTA ES LA MAGIA!
+  
   img.src = seq[idx];
   return img;
 }
+
 function parseCSV(text){
   const rows = [];
   let row = [], cur = "", inQ = false;
@@ -287,94 +261,131 @@ function parseCSV(text){
   return rows;
 }
 
-/* === CARGA DE PRODUCTOS === */
-async function cargarProductos(){
+/* =================================================================
+ * MEJORA 2: LÓGICA DE CACHÉ
+ * ================================================================= */
+
+// 1. Nueva función: Carga los productos desde la Hoja de Google
+async function cargarProductosDesdeSheet(){
+  console.log("Cargando desde Google Sheet (Lento)...");
   try{
     const res = await fetch(sheetURL, { cache: "no-store" });
     const text = await res.text();
     const matriz = parseCSV(text);
     const data = matriz.slice(1).filter(r => r && r.length);
-
-    const spinner = contProductos.querySelector('.spinner-wrap');
-    if (spinner) {
-      spinner.remove();
-    }
     
-    const categorias = new Set();
+    // Guarda los datos y la fecha en el caché
+    const cacheData = {
+      timestamp: Date.now(),
+      productos: data
+    };
+    localStorage.setItem('productosCache', JSON.stringify(cacheData));
+    
+    // Llama a la función que dibuja la página
+    renderizarPagina(data);
 
-    data.forEach(r => {
-      const categoria = trimAll(stripQuotes(r[0]||"General")); 
-      const nombre    = trimAll(stripQuotes(r[1]||""));
-      const precioNormalStr  = trimAll(stripQuotes(r[2]||""));
-      const precioOfertaStr  = trimAll(stripQuotes(r[5]||"")); 
-      const urlRaw    = trimAll(stripQuotes(r[IMAGE_COL_INDEX]||""));
-      const id        = extractDriveId(urlRaw);
-      
-      categorias.add(categoria);
-
-      const precioNormalNum = parseFloat(precioNormalStr);
-      const precioOfertaNum = parseFloat(precioOfertaStr);
-      
-      if(!nombre || isNaN(precioNormalNum)) return; 
-
-      const precioFinalNum = precioOfertaNum > 0 ? precioOfertaNum : precioNormalNum;
-      
-      let precioHTML = "";
-      if(precioOfertaNum > 0){
-        precioHTML = `
-          <div class="precio-anterior">Antes: Q${precioNormalNum.toFixed(2)}</div>
-          <div class="precio-oferta">OFERTA: Q${precioOfertaNum.toFixed(2)}</div>
-        `;
-      } else {
-        precioHTML = `<div class="precio">Q${precioNormalNum.toFixed(2)}</div>`;
-      }
-
-      const card = document.createElement("div");
-      card.className = "card";
-      card.dataset.categoria = categoria;
-
-      const imgWrap = document.createElement("div");
-      imgWrap.className = "imgwrap";
-
-      const onImageLoaded = () => card.classList.add("loaded");
-      const imgEl = buildImageWithFallback(id || urlRaw, onImageLoaded);
-
-      if(imgEl){ imgWrap.appendChild(imgEl); }
-      else{
-        const ph = document.createElement("img");
-        ph.src = "https://via.placeholder.com/640x400?text=Imagen+no+disponible";
-        imgWrap.appendChild(ph);
-        card.classList.add("loaded");
-      }
-
-      card.appendChild(imgWrap);
-      
-      card.insertAdjacentHTML("beforeend", `
-        <div class="nombre">${nombre}</div>
-        ${precioHTML} 
-        <button class="btn" onclick="agregarAlCarrito('${nombre}', ${precioFinalNum})">
-            Añadir al carrito
-        </button>
-      `);
-
-      contProductos.appendChild(card);
-    });
-
-    renderizarFiltros(categorias);
-
-    if(!contProductos.children.length){
-      contProductos.innerHTML = "<p>No se encontraron productos.</p>";
-    }
-  }catch(e){
+  } catch(e) {
     console.error(e);
     contProductos.innerHTML = "<p style='color:#c00'>No se pudieron cargar los productos.</p>";
   }
 }
 
-/* === FUNCIONES DE FILTROS === */
-function renderizarFiltros(categoriasSet) {
-  const categorias = [...categoriasSet].sort();
+// 2. Nueva función: Dibuja la página usando los datos (de caché o de la red)
+function renderizarPagina(data) {
+  const spinner = contProductos.querySelector('.spinner-wrap');
+  if (spinner) {
+    spinner.remove();
+  }
+  
+  const categorias = new Set();
+  data.forEach(r => {
+    const categoria = trimAll(stripQuotes(r[0]||"General")); 
+    const nombre    = trimAll(stripQuotes(r[1]||""));
+    const precioNormalStr  = trimAll(stripQuotes(r[2]||""));
+    const precioOfertaStr  = trimAll(stripQuotes(r[5]||"")); 
+    const urlRaw    = trimAll(stripQuotes(r[IMAGE_COL_INDEX]||""));
+    const id        = extractDriveId(urlRaw);
+    
+    categorias.add(categoria);
+    const precioNormalNum = parseFloat(precioNormalStr);
+    const precioOfertaNum = parseFloat(precioOfertaStr);
+    if(!nombre || isNaN(precioNormalNum)) return; 
 
+    const precioFinalNum = precioOfertaNum > 0 ? precioOfertaNum : precioNormalNum;
+    
+    let precioHTML = "";
+    if(precioOfertaNum > 0){
+      precioHTML = `
+        <div class="precio-anterior">Antes: Q${precioNormalNum.toFixed(2)}</div>
+        <div class="precio-oferta">OFERTA: Q${precioOfertaNum.toFixed(2)}</div>
+      `;
+    } else {
+      precioHTML = `<div class="precio">Q${precioNormalNum.toFixed(2)}</div>`;
+    }
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.categoria = categoria;
+
+    const imgWrap = document.createElement("div");
+    imgWrap.className = "imgwrap";
+    const onImageLoaded = () => card.classList.add("loaded");
+    const imgEl = buildImageWithFallback(id || urlRaw, onImageLoaded);
+
+    if(imgEl){ imgWrap.appendChild(imgEl); }
+    else{
+      const ph = document.createElement("img");
+      ph.src = "https://via.placeholder.com/640x400?text=Imagen+no+disponible";
+      imgWrap.appendChild(ph);
+      card.classList.add("loaded");
+    }
+
+    card.appendChild(imgWrap);
+    card.insertAdjacentHTML("beforeend", `
+      <div class="nombre">${nombre}</div>
+      ${precioHTML} 
+      <button class="btn" onclick="agregarAlCarrito('${nombre}', ${precioFinalNum})">
+          Añadir al carrito
+      </button>
+    `);
+    contProductos.appendChild(card);
+  });
+
+  renderizarFiltros(categorias);
+
+  if(!contProductos.children.length){
+    contProductos.innerHTML = "<p>No se encontraron productos.</p>";
+  }
+}
+
+// 3. Nueva función: Revisa el caché al cargar la página
+function iniciarCarga() {
+  const cacheJSON = localStorage.getItem('productosCache');
+  if (cacheJSON) {
+    const cache = JSON.parse(cacheJSON);
+    const ahora = Date.now();
+    const tiempoPasado = (ahora - cache.timestamp) / (1000 * 60); // en minutos
+    
+    if (tiempoPasado < CACHE_DURACION_MINUTOS) {
+      // Si el caché es fresco, úsalo
+      console.log("Cargando desde Caché (Rápido)...");
+      renderizarPagina(cache.productos);
+      return;
+    }
+  }
+  
+  // Si no hay caché o está viejo, carga desde la red
+  cargarProductosDesdeSheet();
+}
+/* =================================================================
+ * FIN DE LA LÓGICA DE CACHÉ
+ * ================================================================= */
+
+
+/* === FUNCIONES DE FILTROS (Sin cambios) === */
+function renderizarFiltros(categoriasSet) {
+  contFiltros.innerHTML = ""; // Limpia filtros por si acaso
+  const categorias = [...categoriasSet].sort();
   const btnTodos = document.createElement('button');
   btnTodos.className = 'btn-filtro active'; 
   btnTodos.innerText = 'Ver Todos';
@@ -389,7 +400,6 @@ function renderizarFiltros(categoriasSet) {
     contFiltros.appendChild(btn);
   });
 }
-
 function filtrarProductos(categoria) {
   const botones = contFiltros.querySelectorAll('.btn-filtro');
   botones.forEach(btn => {
@@ -399,7 +409,6 @@ function filtrarProductos(categoria) {
       btn.classList.remove('active');
     }
   });
-
   const cards = contProductos.querySelectorAll('.card');
   cards.forEach(card => {
     if (categoria === 'Todos' || card.dataset.categoria === categoria) {
@@ -410,10 +419,9 @@ function filtrarProductos(categoria) {
   });
 }
 
-/* === FUNCIONES DEL CARRITO === */
+/* === FUNCIONES DEL CARRITO (Sin cambios) === */
 function mostrarCarrito() { modal.style.display = "block"; }
 function ocultarCarrito() { modal.style.display = "none"; }
-
 function agregarAlCarrito(nombre, precio) {
   const itemExistente = carrito.find(item => item.nombre === nombre);
   if (itemExistente) {
@@ -423,22 +431,18 @@ function agregarAlCarrito(nombre, precio) {
   }
   renderizarCarrito();
 }
-
 function eliminarDelCarrito(index) {
   carrito.splice(index, 1); 
   renderizarCarrito();
 }
-
 function vaciarCarrito() {
   carrito = [];
   renderizarCarrito();
   ocultarCarrito();
 }
-
 function renderizarCarrito() {
   let total = 0;
   let totalItems = 0;
-  
   if (carrito.length === 0) {
     cartList.innerHTML = "<li>Aún no tienes productos.</li>";
   } else {
@@ -456,9 +460,7 @@ function renderizarCarrito() {
       cartList.appendChild(li);
     });
   }
-  
   cartTotalEl.innerText = `Total: Q${total.toFixed(2)}`;
-  
   if (totalItems > 0) {
     btnFlotante.innerHTML = `🛒 Carrito (${totalItems}) - Q${total.toFixed(2)}`;
     btnFlotante.style.display = "block";
@@ -466,7 +468,6 @@ function renderizarCarrito() {
     btnFlotante.style.display = "none";
   }
 }
-
 function finalizarPedido() {
   if (carrito.length === 0) {
     alert("Tu carrito está vacío.");
@@ -484,9 +485,9 @@ function finalizarPedido() {
   window.open(url, '_blank');
 }
 
-
 /* === INICIALIZACIÓN === */
 document.addEventListener("DOMContentLoaded", () => {
+  // Asigna las variables globales a los elementos del DOM
   modal = document.getElementById("modal-carrito");
   btnFlotante = document.getElementById("btn-flotante-carrito");
   cartList = document.getElementById("cart-items");
@@ -500,7 +501,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  cargarProductos();
+  // Llama a la nueva función de carga con caché
+  iniciarCarga();
 });
 </script>
 </body>
