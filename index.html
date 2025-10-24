@@ -18,7 +18,70 @@
 <style>
   :root{--azul1:#007bff;--azul2:#00c6ff;--verde:#25D366;--rojo:#c00;--sombra:0 4px 12px rgba(0,0,0,.12)}
   *{box-sizing:border-box}
-  body{margin:0;font-family:'Poppins',sans-serif;background:linear-gradient(to bottom,#ccefff,#ffffff);margin-bottom:100px}
+  body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(to bottom,#ccefff,#ffffff);
+    margin-bottom:100px;
+    position: relative; /* Necesario para el z-index */
+  }
+
+  /* =================================================================
+   * INICIO: NUEVO (Fondo de Burbujas)
+   * ================================================================= */
+  .burbujas-fondo {
+    position: fixed; /* Fijo para que se quede en el fondo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0; /* Capa 0 (el fondo) */
+  }
+
+  .burbujas-fondo span {
+    position: absolute;
+    bottom: -100px; /* Empezar abajo, fuera de la pantalla */
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.18); /* Color de burbuja */
+    border-radius: 50%;
+    animation: animarBurbujas 20s linear infinite;
+    opacity: 0.8;
+  }
+
+  /* Keyframes para la animación de subir */
+  @keyframes animarBurbujas {
+    0% {
+      transform: translateY(0);
+      opacity: 0.7;
+    }
+    100% {
+      transform: translateY(-120vh); /* Mover hasta arriba y fuera */
+      opacity: 0;
+    }
+  }
+
+  /* Variaciones de tamaño, velocidad y posición */
+  .burbujas-fondo span:nth-child(1) { left: 10%; animation-duration: 25s; animation-delay: 2s; width: 20px; height: 20px; }
+  .burbujas-fondo span:nth-child(2) { left: 80%; animation-duration: 18s; animation-delay: 0s; width: 50px; height: 50px; }
+  .burbujas-fondo span:nth-child(3) { left: 30%; animation-duration: 22s; animation-delay: 5s; width: 35px; height: 35px; }
+  .burbujas-fondo span:nth-child(4) { left: 50%; animation-duration: 20s; animation-delay: 7s; width: 15px; height: 15px; }
+  .burbujas-fondo span:nth-child(5) { left: 65%; animation-duration: 28s; animation-delay: 1s; width: 45px; height: 45px; }
+  .burbujas-fondo span:nth-child(6) { left: 90%; animation-duration: 15s; animation-delay: 4s; width: 25px; height: 25px; }
+  .burbujas-fondo span:nth-child(7) { left: 20%; animation-duration: 23s; animation-delay: 8s; width: 30px; height: 30px; }
+  .burbujas-fondo span:nth-child(8) { left: 45%; animation-duration: 19s; animation-delay: 3s; width: 40px; height: 40px; }
+  /* =================================================================
+   * FIN: NUEVO (Fondo de Burbujas)
+   * ================================================================= */
+
+  /* --- Contenido Principal (Ajuste de Capas) --- */
+  /* Todos estos elementos deben estar por ENCIMA de las burbujas */
+  header, .intro, .aviso, #filtros-categorias, #productos, footer {
+    position: relative;
+    z-index: 2; /* Capa 2 (contenido) */
+  }
+
   header{background:linear-gradient(to right,var(--azul1),var(--azul2));color:#fff;text-align:center;padding:28px 16px}
   header h1{margin:0;font-size:2rem}
   header p{margin:.3rem 0 0;opacity:.95}
@@ -50,68 +113,22 @@
   .btn-mapa:hover{background:var(--azul2)}
   .mayorista {margin-top: 12px;font-weight: 600;color: var(--azul1);}
 
-  /* =================================================================
-   * INICIO: NUEVO CSS (Spinner y Filtros)
-   * ================================================================= */
-
   /* Estilos del Spinner de Carga */
-  .spinner-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    color: var(--azul1);
-    font-weight: 600;
-  }
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f0f0f0;
-    border-top: 4px solid var(--azul1);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 10px;
-  }
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+  .spinner-wrap {display: flex;flex-direction: column;align-items: center;justify-content: center;padding: 40px;color: var(--azul1);font-weight: 600;}
+  .spinner {width: 40px;height: 40px;border: 4px solid #f0f0f0;border-top: 4px solid var(--azul1);border-radius: 50%;animation: spin 1s linear infinite;margin-bottom: 10px;}
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
   /* Contenedor de Filtros */
-  #filtros-categorias {
-    text-align: center;
-    padding: 10px 15px;
-    flex-wrap: wrap; /* Para que los botones se ajusten en móviles */
-    display: flex; /* Oculto por defecto, JS lo mostrará */
-    justify-content: center;
-    gap: 10px;
-  }
-  .btn-filtro {
-    background-color: #f0f0f0;
-    color: #444;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 600;
-    font-family: 'Poppins', sans-serif;
-    transition: all 0.2s ease;
-  }
-  .btn-filtro:hover {
-    background-color: #ddd;
-  }
-  .btn-filtro.active {
-    background-color: var(--azul1);
-    color: white;
-  }
+  #filtros-categorias {text-align: center;padding: 10px 15px;flex-wrap: wrap;display: flex;justify-content: center;gap: 10px;}
+  .btn-filtro {background-color: #f0f0f0;color: #444;border: none;padding: 8px 14px;border-radius: 20px;cursor: pointer;font-weight: 600;font-family: 'Poppins', sans-serif;transition: all 0.2s ease;}
+  .btn-filtro:hover {background-color: #ddd;}
+  .btn-filtro.active {background-color: var(--azul1);color: white;}
 
-  /* =================================================================
-   * FIN: NUEVO CSS
-   * ================================================================= */
-
-  /* --- CSS DEL CARRITO (Sin cambios) --- */
+  /* --- CSS DEL CARRITO --- */
+  /* El z-index 999 lo pone por encima de todo, excepto el modal */
   #btn-flotante-carrito {position: fixed;bottom: 20px;right: 20px;background-color: var(--verde);color: white;padding: 12px 18px;border-radius: 50px;box-shadow: 0 4px 12px rgba(0,0,0,0.2);font-weight: 600;font-size: 1rem;cursor: pointer;z-index: 999;border: none;display: none;}
+  
+  /* El z-index 1000 lo pone por encima de todo */
   #modal-carrito {display: none; position: fixed; z-index: 1000; left: 0;top: 0;width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6);}
   .modal-contenido {background-color: #fefefe;margin: 15% auto; padding: 24px;border: 1px solid #888;border-radius: 12px;width: 90%;max-width: 500px;box-shadow: 0 5px 20px rgba(0,0,0,0.3);}
   .modal-header {display: flex;justify-content: space-between;align-items: center;border-bottom: 1px solid #eee;padding-bottom: 10px;}
@@ -132,6 +149,16 @@
 </head>
 <body>
 
+<div class="burbujas-fondo">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
 <header>
   <h1>Distribuidora A & B</h1>
   <p>Productos de limpieza MAX Oxy con calidad y precios accesibles</p>
@@ -167,6 +194,7 @@
     <div>Cargando productos…</div>
   </div>
 </div>
+
 <footer>© Distribuidora A & B - Huehuetenango 2025</footer>
 
 <button id="btn-flotante-carrito" onclick="mostrarCarrito()">
@@ -198,10 +226,10 @@ const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesa
 const IMAGE_COL_INDEX = 3; // 0=A, 1=B, 2=C, 3=D, 4=E
 const whatsapp = "50247111160";
 
-/* VARIABLES GLOBALES Y ELEMENTOS DEL CARRITO */
+/* VARIABLES GLOBALES Y ELEMENTOS DEL DOM */
 let carrito = []; 
 let modal, btnFlotante, cartList, cartTotalEl;
-let contProductos, contFiltros; // Nuevas variables para contenedores
+let contProductos, contFiltros;
 
 
 /* === UTILIDADES === */
@@ -269,17 +297,14 @@ async function cargarProductos(){
     const matriz = parseCSV(text);
     const data = matriz.slice(1).filter(r => r && r.length);
 
-    // Selecciona el spinner y lo elimina
     const spinner = contProductos.querySelector('.spinner-wrap');
     if (spinner) {
       spinner.remove();
     }
     
-    // Para guardar las categorías únicas
     const categorias = new Set();
 
     data.forEach(r => {
-      // Columnas: A=0, B=1, C=2, D=3, E=4, F=5
       const categoria = trimAll(stripQuotes(r[0]||"General")); // Columna A
       const nombre    = trimAll(stripQuotes(r[1]||""));
       const precioNormalStr  = trimAll(stripQuotes(r[2]||""));
@@ -287,7 +312,6 @@ async function cargarProductos(){
       const urlRaw    = trimAll(stripQuotes(r[IMAGE_COL_INDEX]||""));
       const id        = extractDriveId(urlRaw);
       
-      // Añade la categoría al Set (automáticamente maneja duplicados)
       categorias.add(categoria);
 
       const precioNormalNum = parseFloat(precioNormalStr);
@@ -309,11 +333,7 @@ async function cargarProductos(){
 
       const card = document.createElement("div");
       card.className = "card";
-      
-      // =================================================================
-      // NUEVO: Añade la categoría como un "data-attribute" a la tarjeta
       card.dataset.categoria = categoria;
-      // =================================================================
 
       const imgWrap = document.createElement("div");
       imgWrap.className = "imgwrap";
@@ -342,7 +362,6 @@ async function cargarProductos(){
       contProductos.appendChild(card);
     });
 
-    // Llama a la nueva función para crear los botones de filtro
     renderizarFiltros(categorias);
 
     if(!contProductos.children.length){
@@ -354,36 +373,26 @@ async function cargarProductos(){
   }
 }
 
-/* =================================================================
- * INICIO: NUEVAS FUNCIONES (FILTROS)
- * ================================================================= */
-
-// Crea los botones de filtro en el HTML
+/* === FUNCIONES DE FILTROS === */
 function renderizarFiltros(categoriasSet) {
-  // Convierte el Set a un Array y lo ordena alfabéticamente
   const categorias = [...categoriasSet].sort();
 
-  // Botón "Ver Todos"
   const btnTodos = document.createElement('button');
-  btnTodos.className = 'btn-filtro active'; // Activo por defecto
+  btnTodos.className = 'btn-filtro active'; 
   btnTodos.innerText = 'Ver Todos';
   btnTodos.onclick = () => filtrarProductos('Todos');
   contFiltros.appendChild(btnTodos);
 
-  // Botones para cada categoría
   categorias.forEach(cat => {
     const btn = document.createElement('button');
     btn.className = 'btn-filtro';
     btn.innerText = cat;
-    // Usamos comillas dentro de la función para pasar el string
     btn.onclick = () => filtrarProductos(cat);
     contFiltros.appendChild(btn);
   });
 }
 
-// Muestra/Oculta productos según la categoría seleccionada
 function filtrarProductos(categoria) {
-  // 1. Maneja la clase "active" en los botones
   const botones = contFiltros.querySelectorAll('.btn-filtro');
   botones.forEach(btn => {
     if (btn.innerText === categoria) {
@@ -393,23 +402,17 @@ function filtrarProductos(categoria) {
     }
   });
 
-  // 2. Muestra/Oculta las tarjetas de productos
   const cards = contProductos.querySelectorAll('.card');
   cards.forEach(card => {
     if (categoria === 'Todos' || card.dataset.categoria === categoria) {
-      card.style.display = 'block'; // Muestra la tarjeta
+      card.style.display = 'block';
     } else {
-      card.style.display = 'none'; // Oculta la tarjeta
+      card.style.display = 'none';
     }
   });
 }
 
-/* =================================================================
- * FIN: NUEVAS FUNCIONES (FILTROS)
- * ================================================================= */
-
-
-/* --- FUNCIONES DEL CARRITO (Sin cambios) --- */
+/* === FUNCIONES DEL CARRITO === */
 function mostrarCarrito() { modal.style.display = "block"; }
 function ocultarCarrito() { modal.style.display = "none"; }
 
@@ -484,19 +487,15 @@ function finalizarPedido() {
 }
 
 
-// Evento que se dispara cuando el HTML está listo
+/* === INICIALIZACIÓN === */
 document.addEventListener("DOMContentLoaded", () => {
   // Asigna las variables globales a los elementos del DOM
   modal = document.getElementById("modal-carrito");
   btnFlotante = document.getElementById("btn-flotante-carrito");
   cartList = document.getElementById("cart-items");
   cartTotalEl = document.getElementById("cart-total");
-  
-  // =================================================================
-  // NUEVO: Asigna los contenedores principales
   contProductos = document.getElementById("productos");
   contFiltros = document.getElementById("filtros-categorias");
-  // =================================================================
 
   window.onclick = function(event) {
     if (event.target == modal) {
