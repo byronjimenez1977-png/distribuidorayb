@@ -1,106 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Distribuidora A & B</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(to bottom, #ccefff, #ffffff);
-    margin: 0;
-  }
-
-  header {
-    background: linear-gradient(to right, #007bff, #00c6ff);
-    color: white;
-    text-align: center;
-    padding: 30px 15px;
-  }
-
-  .intro {
-    background: white;
-    text-align: center;
-    width: 90%;
-    max-width: 800px;
-    margin: 20px auto;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
-
-  .aviso {
-    background: #ffa500;
-    color: white;
-    font-weight: bold;
-    padding: 10px;
-    text-align: center;
-  }
-
-  .productos {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 25px;
-    padding: 20px;
-  }
-
-  .card {
-    width: 250px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
-  }
-
-  .card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.6s ease;
-  }
-
-  .card.loaded img {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .nombre { font-weight: 600; margin-top: 10px; }
-  .precio { color: #333; margin: 5px 0; }
-
-  .btn {
-    background: #25D366;
-    color: white;
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    display: inline-block;
-    margin-bottom: 10px;
-  }
-
-  .btn:hover {
-    background: #1ebe5d;
-  }
-
-  footer {
-    background: #f2f2f2;
-    text-align: center;
-    padding: 15px;
-    margin-top: 30px;
-    color: #444;
-    font-size: 0.9em;
-  }
-
+  :root{--azul1:#007bff;--azul2:#00c6ff;--verde:#25D366;--sombra:0 4px 12px rgba(0,0,0,.12)}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Poppins',sans-serif;background:linear-gradient(to bottom,#ccefff,#ffffff)}
+  header{background:linear-gradient(to right,var(--azul1),var(--azul2));color:#fff;text-align:center;padding:28px 16px}
+  header h1{margin:0;font-size:2rem}
+  header p{margin:.3rem 0 0;opacity:.95}
+  .intro{background:#fff;border-radius:14px;box-shadow:var(--sombra);padding:16px 20px;margin:18px auto;max-width:820px;width:90%;text-align:center}
+  .aviso{background:#ffa500;color:#fff;font-weight:700;text-align:center;padding:10px;margin:12px auto 0;max-width:980px;border-radius:10px}
+  #productos{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;padding:22px}
+  .card{width:260px;background:#fff;border-radius:16px;box-shadow:var(--sombra);overflow:hidden;text-align:center;transition:.25s transform,.25s box-shadow}
+  .card:hover{transform:translateY(-4px);box-shadow:0 10px 18px rgba(0,0,0,.16)}
+  .imgwrap{position:relative;height:200px;background:#f2f6fb}
+  .imgwrap img{width:100%;height:100%;object-fit:cover;opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease}
+  .card.loaded .imgwrap img{opacity:1;transform:translateY(0)}
+  .nombre{font-weight:600;color:#0a2a5f;margin:10px 10px 4px}
+  .precio{font-weight:700;color:#333;margin:0 0 10px}
+  .btn{display:inline-block;background:var(--verde);color:#fff;text-decoration:none;padding:9px 14px;border-radius:12px;margin:0 0 14px;font-weight:600}
+  .btn:hover{filter:brightness(.95)}
+  footer{background:#f7f7f7;text-align:center;color:#555;font-size:.9rem;padding:12px;margin-top:8px}
 </style>
 </head>
 <body>
@@ -111,63 +36,151 @@
 </header>
 
 <div class="intro">
-  🧴 ¡Bienvenido a Distribuidora A & B!  
-  Conocé nuestros productos elaborados con esmero para tu hogar y negocio.  
+  🧴 Bienvenido a Distribuidora A & B. Conocé nuestros productos de limpieza de calidad premium.<br>
   📍 Mercado Las Victorias, Local No. 44, Zona 5, Huehuetenango.
 </div>
 
 <div class="aviso">
-  🚚 Entrega GRATIS en compras mayores de Q150 — Pedidos menores, costo de envío Q15.
+  🚚 Entrega GRATIS en compras mayores de Q150 — Pedidos menores, costo de envío Q15 en toda la ciudad de Huehuetenango.
 </div>
 
-<div id="productos" class="productos">Cargando productos...</div>
+<div id="productos">Cargando productos…</div>
 
-<footer>
-  © Distribuidora A & B - Huehuetenango 2025
-</footer>
+<footer>© Distribuidora A & B - Huehuetenango 2025</footer>
 
 <script>
+/* === CONFIGURACIÓN === */
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesaBrL74caLRyCnPuBVAMWUSHzfyUelxzclArKYz0H1x6HY5gC0hL3ZPGqkJQbAxsU4D/pub?gid=0&single=true&output=csv";
-const whatsapp = "50247111160"; // tu número
+/* Si en tu hoja la imagen está en columna D usa 3; si está en columna E (Imagen limpia), usa 4 */
+const IMAGE_COL_INDEX = 3; // 0=A, 1=B, 2=C, 3=D, 4=E
+const whatsapp = "50247111160";
 
-async function cargarProductos() {
-  const res = await fetch(sheetURL);
-  const data = await res.text();
-  const filas = data.split("\n").slice(1);
+/* === UTILIDADES PARA LIMPIAR / NORMALIZAR === */
+function trimAll(x){ return (x||"").toString().replace(/^\s+|\s+$/g,""); }
+function stripQuotes(x){ return (x||"").replace(/^"+|"+$/g,"").replace(/['“”]+/g,""); }
+
+/* Extrae ID desde cualquier formato de Drive */
+function extractDriveId(url){
+  if(!url) return "";
+  const u = stripQuotes(url).trim();
+  // uc?id=ID
+  let m = u.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if(m) return m[1];
+  // /file/d/ID/
+  m = u.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if(m) return m[1];
+  // /d/ID (lh3, etc)
+  m = u.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(m) return m[1];
+  // texto plano que ya es ID
+  if(/^[a-zA-Z0-9_-]{25,}$/.test(u)) return u;
+  return "";
+}
+
+/* Genera 3 fuentes posibles y hace fallback si fallan */
+function buildImageWithFallback(id){
+  if(!id) return null;
+  const primary   = `https://drive.google.com/uc?export=view&id=${id}`;
+  const fallback1 = `https://lh3.googleusercontent.com/d/${id}`; // alternativa estable
+  const fallback2 = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`; // miniatura grande
+
+  // Cache-buster para evitar caché vieja del navegador/CDN
+  const cb = `cb=${Date.now()}`;
+  const seq = [primary, fallback1, fallback2].map(u => u + (u.includes("?") ? "&" : "?") + cb);
+
+  // Creamos el elemento <img> con encadenamiento de fallbacks
+  const img = document.createElement("img");
+  let idx = 0;
+  img.src = seq[idx];
+  img.onerror = () => {
+    idx++;
+    if(idx < seq.length) img.src = seq[idx];
+    else img.src = "https://via.placeholder.com/640x400?text=Imagen+no+disponible";
+  };
+  return img;
+}
+
+/* Parser CSV simple (maneja comillas) */
+function parseCSV(text){
+  const rows = [];
+  let row = [], cur = "", inQ = false;
+  for(let i=0;i<text.length;i++){
+    const ch = text[i], nx = text[i+1];
+    if(inQ){
+      if(ch === '"' && nx === '"'){ cur += '"'; i++; }
+      else if(ch === '"'){ inQ = false; }
+      else { cur += ch; }
+    }else{
+      if(ch === '"'){ inQ = true; }
+      else if(ch === ','){ row.push(cur); cur = ""; }
+      else if(ch === '\n'){ row.push(cur); rows.push(row); row = []; cur = ""; }
+      else if(ch === '\r'){ /* skip */ }
+      else { cur += ch; }
+    }
+  }
+  if(cur.length || row.length) { row.push(cur); rows.push(row); }
+  return rows;
+}
+
+/* Render principal */
+async function cargarProductos(){
   const cont = document.getElementById("productos");
-  cont.innerHTML = "";
+  try{
+    const res = await fetch(sheetURL, { cache: "no-store" });
+    const text = await res.text();
+    const matriz = parseCSV(text);
+    // quitar encabezado si lo hay (primera fila con títulos)
+    const data = matriz.slice(1).filter(r => r && r.length);
 
-  filas.forEach(f => {
-    const c = f.split(",");
-    if (c.length >= 4) {
-      const nombre = c[1].replace(/"/g, "").trim();
-      const precio = c[2].trim();
-      let imagen = c[4].trim();
+    cont.innerHTML = "";
+    data.forEach(r => {
+      const categoria = trimAll(stripQuotes(r[0]||""));
+      const nombre    = trimAll(stripQuotes(r[1]||""));
+      const precio    = trimAll(stripQuotes(r[2]||""));
+      const urlRaw    = trimAll(stripQuotes(r[IMAGE_COL_INDEX]||""));
+      const id        = extractDriveId(urlRaw);
 
-      // 🔧 FIX IMPORTANTE:
-      // Si el link tiene comillas o espacios, los eliminamos
-      imagen = imagen.replace(/['"]+/g, '').replace(/\s+/g, '');
+      if(!nombre || !precio) return; // saltar filas vacías
 
       const card = document.createElement("div");
       card.className = "card";
-      card.innerHTML = `
-        <img src="${imagen}" alt="${nombre}">
+      const imgWrap = document.createElement("div");
+      imgWrap.className = "imgwrap";
+
+      const imgEl = buildImageWithFallback(id || urlRaw);
+      if(imgEl){
+        imgEl.onload = () => card.classList.add("loaded");
+        imgWrap.appendChild(imgEl);
+      }else{
+        // si no logramos ID ni URL válida, placeholder
+        const ph = document.createElement("img");
+        ph.src = "https://via.placeholder.com/640x400?text=Imagen+no+disponible";
+        imgWrap.appendChild(ph);
+      }
+
+      card.appendChild(imgWrap);
+      card.insertAdjacentHTML("beforeend", `
         <div class="nombre">${nombre}</div>
         <div class="precio">Q${precio}</div>
-        <a class="btn" href="https://wa.me/${whatsapp}?text=Hola,%20quiero%20pedir%20${encodeURIComponent(nombre)}%20(Q${precio})" target="_blank">Pedir por WhatsApp</a>
-      `;
-      cont.appendChild(card);
+        <a class="btn" target="_blank"
+           href="https://wa.me/${whatsapp}?text=${encodeURIComponent(`Hola, quiero pedir ${nombre} (Q${precio})`)}">
+           Pedir por WhatsApp
+        </a>
+      `);
 
-      const img = card.querySelector("img");
-      img.onload = () => card.classList.add("loaded");
+      cont.appendChild(card);
+    });
+
+    if(!cont.children.length){
+      cont.innerHTML = "<p>No se encontraron productos. Revisá que la hoja tenga filas y que el enlace sea CSV.</p>";
     }
-  });
+  }catch(e){
+    console.error(e);
+    cont.innerHTML = "<p style='color:#c00'>No se pudieron cargar los productos. Verificá el enlace CSV público.</p>";
+  }
 }
 
-cargarProductos();
+document.addEventListener("DOMContentLoaded", cargarProductos);
 </script>
-
 </body>
 </html>
-
-
