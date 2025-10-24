@@ -8,20 +8,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <meta name="theme-color" content="#007bff">
-
 <meta name="mobile-web-app-capable" content="yes">
-
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Dist. A&B">
-
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 
 <style>
-  :root{--azul1:#007bff;--azul2:#00c6ff;--verde:#25D366;--sombra:0 4px 12px rgba(0,0,0,.12)}
+  :root{--azul1:#007bff;--azul2:#00c6ff;--verde:#25D366;--rojo:#c00;--sombra:0 4px 12px rgba(0,0,0,.12)}
   *{box-sizing:border-box}
-  body{margin:0;font-family:'Poppins',sans-serif;background:linear-gradient(to bottom,#ccefff,#ffffff)}
+  body{margin:0;font-family:'Poppins',sans-serif;background:linear-gradient(to bottom,#ccefff,#ffffff);margin-bottom:100px}
   header{background:linear-gradient(to right,var(--azul1),var(--azul2));color:#fff;text-align:center;padding:28px 16px}
   header h1{margin:0;font-size:2rem}
   header p{margin:.3rem 0 0;opacity:.95}
@@ -35,47 +32,140 @@
   .card.loaded .imgwrap img{opacity:1;transform:translateY(0)}
   .nombre{font-weight:600;color:#0a2a5f;margin:10px 10px 4px}
   .precio{font-weight:700;color:#333;margin:0 0 10px; font-size: 1.1rem;}
-  .btn{display:inline-block;background:var(--verde);color:#fff;text-decoration:none;padding:9px 14px;border-radius:12px;margin:0 0 14px;font-weight:600}
+  .btn{display:inline-block;background:var(--verde);color:#fff;text-decoration:none;padding:9px 14px;border-radius:12px;margin:0 0 14px;font-weight:600;border:none;font-family:'Poppins',sans-serif;font-size:0.9rem;cursor:pointer}
   .btn:hover{filter:brightness(.95)}
   footer{background:#f7f7f7;text-align:center;color:#555;font-size:.9rem;padding:12px;margin-top:8px}
 
+  /* Precios de Oferta */
+  .precio-anterior{font-size: 0.9rem;color: #777;text-decoration: line-through;margin: -5px 0 2px;}
+  .precio-oferta{font-weight: 700;color:var(--rojo);font-size: 1.15rem;margin: 0 0 10px;}
+
+  /* Mapa */
+  .mapa-link-wrap{margin-top:16px}
+  .btn-mapa{background:var(--azul1);color:white;padding:10px 15px;border-radius:8px;text-decoration:none;font-weight:600}
+  .btn-mapa:hover{background:var(--azul2)}
+  
+  .mayorista {margin-top: 12px;font-weight: 600;color: var(--azul1);}
+
   /* =================================================================
-   * INICIO: CSS PARA PRECIOS DE OFERTA
-   * ================================================================= */
-  .precio-anterior{
-    font-size: 0.9rem;
-    color: #777;
-    text-decoration: line-through;
-    margin: -5px 0 2px;
-  }
-  .precio-oferta{
-    font-weight: 700;
-    color: #c00; /* Rojo */
-    font-size: 1.15rem;
-    margin: 0 0 10px;
-  }
-  /* =================================================================
-   * FIN: CSS PARA PRECIOS DE OFERTA
+   * INICIO: CSS DEL CARRITO DE COMPRAS
    * ================================================================= */
 
-  /* Estilos para el mapa */
-  .mapa-wrap{
-    margin-top: 16px;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #ddd;
-  }
-  .mapa-wrap iframe{
-    width: 100%;
-    height: 250px;
-    border: 0;
-  }
-  /* Estilo para mensaje mayorista */
-  .mayorista {
-    margin-top: 12px;
+  /* Botón flotante */
+  #btn-flotante-carrito {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--verde);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 999;
+    border: none;
+    display: none; /* Oculto hasta que se añada algo */
+  }
+
+  /* Modal (Fondo oscuro) */
+  #modal-carrito {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.6);
+  }
+
+  /* Contenido del Modal (Caja blanca) */
+  .modal-contenido {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 24px;
+    border: 1px solid #888;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+  }
+  .modal-header h2 {
+    margin: 0;
     color: var(--azul1);
   }
+  .modal-cerrar {
+    color: #aaa;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .modal-cerrar:hover,
+  .modal-cerrar:focus {
+    color: #333;
+  }
+  
+  #cart-items {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    max-height: 250px;
+    overflow-y: auto;
+  }
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 4px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.95rem;
+  }
+  .cart-item span {
+    flex-grow: 1;
+  }
+  .cart-item button {
+    background: none;
+    border: none;
+    color: var(--rojo);
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 5px;
+  }
+  
+  .cart-total {
+    text-align: right;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-top: 20px;
+    color: #333;
+  }
+  
+  .cart-acciones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  .btn-vaciar {
+    background: #aaa;
+  }
+  .btn-vaciar:hover {
+    background: #888;
+  }
+  /* =================================================================
+   * FIN: CSS DEL CARRITO DE COMPRAS
+   * ================================================================= */
 
 </style>
 </head>
@@ -93,16 +183,16 @@
   <div class="mayorista">
     Precios especiales a clientes mayoristas
   </div>
-
-  <div class="mapa-wrap">
-    <iframe 
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.153716613385!2d-91.46747802580798!3d15.529323153545108!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x858c06e8b8a74eab%3A0x933095c517f7397c!2sMercado%20Las%20Victorias!5e0!3m2!1ses!2sgt!4v1729732560548!5m2!1ses!2sgt" 
-      allowfullscreen="" 
-      loading="lazy" 
-      referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
+  
+  <div class="mapa-link-wrap">
+    <a href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.153716613385!2d-91.46747802580798!3d15.529323153545108!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x858c06e8b8a74eab%3A0x933095c517f7397c!2sMercado%20Las%20Victorias!5e0!3m2!1ses!2sgt!4v1729732560548!5m2!1ses!2sgt" 
+       class="btn-mapa" 
+       target="_blank">
+       📍 Cómo llegar
+    </a>
   </div>
-</div>
+  </div>
+
 <div class="aviso">
   🚚 Entrega GRATIS en compras mayores de Q150 — Pedidos menores, costo de envío Q15 en toda la ciudad de Huehuetenango.
 </div>
@@ -111,12 +201,50 @@
 
 <footer>© Distribuidora A & B - Huehuetenango 2025</footer>
 
+<button id="btn-flotante-carrito" onclick="mostrarCarrito()">
+  🛒 Carrito (0) - Q0.00
+</button>
+
+<div id="modal-carrito">
+  <div class="modal-contenido">
+    
+    <div class="modal-header">
+      <h2>Mi Pedido</h2>
+      <span class="modal-cerrar" onclick="ocultarCarrito()">&times;</span>
+    </div>
+    
+    <ul id="cart-items">
+      <li>Aún no tienes productos.</li>
+    </ul>
+    
+    <div id="cart-total" class="cart-total">
+      Total: Q0.00
+    </div>
+    
+    <div class="cart-acciones">
+      <button class="btn btn-vaciar" onclick="vaciarCarrito()">Vaciar Carrito</button>
+      <button class="btn" onclick="finalizarPedido()">Finalizar Pedido (WhatsApp)</button>
+    </div>
+    
+  </div>
+</div>
 <script>
 /* === CONFIGURACIÓN === */
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesaBrL74caLRyCnPuBVAMWUSHzfyUelxzclArKYz0H1x6HY5gC0hL3ZPGqkJQbAxsU4D/pub?gid=0&single=true&output=csv";
-/* Si en tu hoja la imagen está en columna D usa 3; si está en columna E (Imagen limpia), usa 4 */
 const IMAGE_COL_INDEX = 3; // 0=A, 1=B, 2=C, 3=D, 4=E
 const whatsapp = "50247111160";
+
+/* =================================================================
+ * INICIO: NUEVAS VARIABLES GLOBALES Y ELEMENTOS DEL CARRITO
+ * ================================================================= */
+let carrito = []; // Aquí se guardarán los productos
+
+// Referencias a los elementos del DOM
+let modal, btnFlotante, cartList, cartTotalEl;
+/* =================================================================
+ * FIN: NUEVAS VARIABLES GLOBALES
+ * ================================================================= */
+
 
 /* === UTILIDADES PARA LIMPIAR / NORMALIZAR === */
 function trimAll(x){ return (x||"").toString().replace(/^\s+|\s+$/g,""); }
@@ -192,46 +320,39 @@ async function cargarProductos(){
     cont.innerHTML = "";
     data.forEach(r => {
       // Columnas: A=0, B=1, C=2, D=3, E=4, F=5
-      const categoria = trimAll(stripQuotes(r[0]||""));
       const nombre    = trimAll(stripQuotes(r[1]||""));
-      
-      /* =================================================================
-       * INICIO: CAMBIO PARA LEER PRECIOS (COLUMNA C y F)
-       * ================================================================= */
-      const precioNormal  = trimAll(stripQuotes(r[2]||""));
-      const precioOferta  = trimAll(stripQuotes(r[5]||"")); // <-- NUEVO: Lee Columna F
+      const precioNormalStr  = trimAll(stripQuotes(r[2]||""));
+      const precioOfertaStr  = trimAll(stripQuotes(r[5]||"")); // Lee Columna F
       const urlRaw    = trimAll(stripQuotes(r[IMAGE_COL_INDEX]||""));
       const id        = extractDriveId(urlRaw);
 
-      if(!nombre || !precioNormal) return; // saltar filas si no hay nombre o precio normal
+      // Convertimos precios a números para cálculos
+      const precioNormalNum = parseFloat(precioNormalStr);
+      const precioOfertaNum = parseFloat(precioOfertaStr);
+      
+      if(!nombre || isNaN(precioNormalNum)) return; // saltar filas si no hay nombre o precio normal
 
-      // Determina qué precio usar para el botón de WhatsApp
-      const precioParaWhats = precioOferta || precioNormal;
+      // Determina qué precio usar
+      const precioFinalNum = precioOfertaNum > 0 ? precioOfertaNum : precioNormalNum;
+      
       let precioHTML = "";
-
-      if(precioOferta){
+      if(precioOfertaNum > 0){
         // Si hay precio en Columna F, es una OFERTA
         precioHTML = `
-          <div class="precio-anterior">Antes: Q${precioNormal}</div>
-          <div class="precio-oferta">OFERTA: Q${precioOferta}</div>
+          <div class="precio-anterior">Antes: Q${precioNormalNum.toFixed(2)}</div>
+          <div class="precio-oferta">OFERTA: Q${precioOfertaNum.toFixed(2)}</div>
         `;
       } else {
         // Si no, es precio normal
-        precioHTML = `<div class="precio">Q${precioNormal}</div>`;
+        precioHTML = `<div class="precio">Q${precioNormalNum.toFixed(2)}</div>`;
       }
-      /* =================================================================
-       * FIN: CAMBIO PARA LEER PRECIOS
-       * ================================================================= */
-
 
       const card = document.createElement("div");
       card.className = "card";
       const imgWrap = document.createElement("div");
       imgWrap.className = "imgwrap";
 
-      const onImageLoaded = () => {
-        card.classList.add("loaded");
-      };
+      const onImageLoaded = () => card.classList.add("loaded");
       const imgEl = buildImageWithFallback(id || urlRaw, onImageLoaded);
 
       if(imgEl){
@@ -246,33 +367,158 @@ async function cargarProductos(){
       card.appendChild(imgWrap);
       
       /* =================================================================
-       * INICIO: CAMBIO PARA INSERTAR EL HTML DEL PRECIO
+       * INICIO: CAMBIO DEL BOTÓN (AHORA LLAMA A JS)
        * ================================================================= */
       card.insertAdjacentHTML("beforeend", `
         <div class="nombre">${nombre}</div>
         ${precioHTML} 
-        <a class="btn" target="_blank"
-            href="https://wa.me/${whatsapp}?text=${encodeURIComponent(`Hola, quiero pedir ${nombre} (Q${precioParaWhats})`)}">
-            Pedir por WhatsApp
-        </a>
+        <button class="btn" onclick="agregarAlCarrito('${nombre}', ${precioFinalNum})">
+            Añadir al carrito
+        </button>
       `);
       /* =================================================================
-       * FIN: CAMBIO PARA INSERTAR EL HTML DEL PRECIO
+       * FIN: CAMBIO DEL BOTÓN
        * ================================================================= */
 
       cont.appendChild(card);
     });
 
     if(!cont.children.length){
-      cont.innerHTML = "<p>No se encontraron productos. Revisá que la hoja tenga filas y que el enlace sea CSV.</p>";
+      cont.innerHTML = "<p>No se encontraron productos.</p>";
     }
   }catch(e){
     console.error(e);
-    cont.innerHTML = "<p style='color:#c00'>No se pudieron cargar los productos. Verificá el enlace CSV público.</p>";
+    cont.innerHTML = "<p style='color:#c00'>No se pudieron cargar los productos.</p>";
   }
 }
 
-document.addEventListener("DOMContentLoaded", cargarProductos);
+/* =================================================================
+ * INICIO: NUEVAS FUNCIONES DEL CARRITO
+ * ================================================================= */
+
+// Muestra el modal
+function mostrarCarrito() {
+  modal.style.display = "block";
+}
+
+// Oculta el modal
+function ocultarCarrito() {
+  modal.style.display = "none";
+}
+
+// Añade un producto al carrito
+function agregarAlCarrito(nombre, precio) {
+  // Busca si el producto ya existe
+  const itemExistente = carrito.find(item => item.nombre === nombre);
+  
+  if (itemExistente) {
+    itemExistente.cantidad++; // Si existe, solo aumenta la cantidad
+  } else {
+    // Si no existe, lo añade como nuevo objeto
+    carrito.push({
+      nombre: nombre,
+      precio: precio,
+      cantidad: 1
+    });
+  }
+  
+  renderizarCarrito();
+  mostrarCarrito(); // Muestra el carrito cada vez que se añade algo
+}
+
+// Elimina un producto del carrito (por su índice en el array)
+function eliminarDelCarrito(index) {
+  carrito.splice(index, 1); // Elimina el elemento en esa posición
+  renderizarCarrito();
+}
+
+// Vacía todo el carrito
+function vaciarCarrito() {
+  carrito = [];
+  renderizarCarrito();
+  ocultarCarrito();
+}
+
+// Dibuja el carrito y actualiza los totales
+function renderizarCarrito() {
+  let total = 0;
+  let totalItems = 0;
+  
+  if (carrito.length === 0) {
+    cartList.innerHTML = "<li>Aún no tienes productos.</li>";
+  } else {
+    cartList.innerHTML = ""; // Limpia la lista
+    carrito.forEach((item, index) => {
+      const subtotal = item.precio * item.cantidad;
+      total += subtotal;
+      totalItems += item.cantidad;
+      
+      const li = document.createElement("li");
+      li.className = "cart-item";
+      li.innerHTML = `
+        <span>${item.cantidad}x ${item.nombre} (Q${subtotal.toFixed(2)})</span>
+        <button onclick="eliminarDelCarrito(${index})">&times;</button>
+      `;
+      cartList.appendChild(li);
+    });
+  }
+  
+  // Actualiza el texto del total en el modal
+  cartTotalEl.innerText = `Total: Q${total.toFixed(2)}`;
+  
+  // Actualiza el botón flotante
+  if (totalItems > 0) {
+    btnFlotante.innerHTML = `🛒 Carrito (${totalItems}) - Q${total.toFixed(2)}`;
+    btnFlotante.style.display = "block";
+  } else {
+    btnFlotante.style.display = "none";
+  }
+}
+
+// Formatea el pedido y lo envía a WhatsApp
+function finalizarPedido() {
+  if (carrito.length === 0) {
+    alert("Tu carrito está vacío.");
+    return;
+  }
+  
+  let mensaje = "Hola, quiero pedir lo siguiente:\n\n";
+  let total = 0;
+  
+  carrito.forEach(item => {
+    const subtotal = item.precio * item.cantidad;
+    mensaje += `${item.cantidad}x ${item.nombre} - Q${subtotal.toFixed(2)}\n`;
+    total += subtotal;
+  });
+  
+  mensaje += `\n*Total a pagar: Q${total.toFixed(2)}*`;
+  
+  const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, '_blank');
+}
+
+
+// Evento que se dispara cuando el HTML está listo
+document.addEventListener("DOMContentLoaded", () => {
+  // Asigna las variables globales a los elementos del DOM
+  modal = document.getElementById("modal-carrito");
+  btnFlotante = document.getElementById("btn-flotante-carrito");
+  cartList = document.getElementById("cart-items");
+  cartTotalEl = document.getElementById("cart-total");
+
+  // Cierra el modal si se hace clic fuera del contenido
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      ocultarCarrito();
+    }
+  }
+
+  // Carga los productos desde la hoja de Google
+  cargarProductos();
+});
+/* =================================================================
+ * FIN: NUEVAS FUNCIONES DEL CARRITO
+ * ================================================================= */
 </script>
 </body>
 </html>
