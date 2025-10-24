@@ -46,9 +46,6 @@
     border-radius: 50%;
     animation: animarBurbujas 20s linear infinite;
     opacity: 0.8;
-    /* =================================================================
-     * MEJORA 3: Optimización de animación
-     * ================================================================= */
     will-change: transform, opacity;
   }
 
@@ -116,9 +113,52 @@
   .modal-cerrar {color: #aaa;font-size: 32px;font-weight: bold;cursor: pointer;}
   .modal-cerrar:hover,.modal-cerrar:focus {color: #333;}
   #cart-items {list-style: none;padding: 0;margin-top: 15px;max-height: 250px;overflow-y: auto;}
-  .cart-item {display: flex;justify-content: space-between;align-items: center;padding: 8px 4px;border-bottom: 1px solid #f0f0f0;font-size: 0.95rem;}
-  .cart-item span {flex-grow: 1;}
-  .cart-item button {background: none;border: none;color: var(--rojo);font-size: 1.2rem;font-weight: bold;cursor: pointer;padding: 0 5px;}
+
+  /* =================================================================
+   * INICIO: CAMBIOS CSS DEL CARRITO
+   * ================================================================= */
+  .cart-item {
+    display: flex;
+    align-items: center; /* Centra verticalmente */
+    gap: 10px; /* Espacio entre imagen y texto */
+    padding: 8px 4px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.95rem;
+  }
+  
+  .cart-item-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #f0f0f0; /* Color mientras carga */
+    flex-shrink: 0; /* Evita que la imagen se encoja */
+  }
+  
+  .cart-item-details {
+    flex-grow: 1; /* Ocupa el espacio restante */
+    line-height: 1.3;
+  }
+  
+  .cart-item-details small {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .cart-item button {
+    background: none;
+    border: none;
+    color: var(--rojo);
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 5px;
+    flex-shrink: 0; /* Evita que el botón se encoja */
+  }
+  /* =================================================================
+   * FIN: CAMBIOS CSS DEL CARRITO
+   * ================================================================= */
+
   .cart-total {text-align: right;font-size: 1.3rem;font-weight: 700;margin-top: 20px;color: #333;}
   .cart-acciones {display: flex;justify-content: space-between;margin-top: 20px;}
   .btn-vaciar {background: #aaa;}
@@ -184,7 +224,7 @@
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesaBrL74caLRyCnPuBVAMWUSHzfyUelxzclArKYz0H1x6HY5gC0hL3ZPGqkJQbAxsU4D/pub?gid=0&single=true&output=csv";
 const IMAGE_COL_INDEX = 3; // 0=A, 1=B, 2=C, 3=D, 4=E
 const whatsapp = "50247111160";
-const CACHE_DURACION_MINUTOS = 30; // Tiempo que guarda los datos
+const CACHE_DURACION_MINUTOS = 30;
 
 /* VARIABLES GLOBALES Y ELEMENTOS DEL DOM */
 let carrito = []; 
@@ -193,7 +233,6 @@ let contProductos, contFiltros;
 
 
 /* === UTILIDADES === */
-// Corregí un error en stripQuotes, (x||"") debe estar entre paréntesis
 function trimAll(x){ return (x || "").toString().replace(/^\s+|\s+$/g,""); }
 function stripQuotes(x){ return (x || "").replace(/^"+|"+$/g,"").replace(/['“”]+/g,""); }
 
@@ -231,11 +270,7 @@ function buildImageWithFallback(id, onLoadCallback){
     }
   };
   
-  // =================================================================
-  // MEJORA 1: Carga Perezosa (Lazy Loading)
-  // =================================================================
-  img.loading = "lazy"; // <-- ¡ESTA ES LA MAGIA!
-  
+  img.loading = "lazy";
   img.src = seq[idx];
   return img;
 }
@@ -261,11 +296,8 @@ function parseCSV(text){
   return rows;
 }
 
-/* =================================================================
- * MEJORA 2: LÓGICA DE CACHÉ
- * ================================================================= */
+/* === LÓGICA DE CACHÉ Y CARGA === */
 
-// 1. Nueva función: Carga los productos desde la Hoja de Google
 async function cargarProductosDesdeSheet(){
   console.log("Cargando desde Google Sheet (Lento)...");
   try{
@@ -274,14 +306,12 @@ async function cargarProductosDesdeSheet(){
     const matriz = parseCSV(text);
     const data = matriz.slice(1).filter(r => r && r.length);
     
-    // Guarda los datos y la fecha en el caché
     const cacheData = {
       timestamp: Date.now(),
       productos: data
     };
     localStorage.setItem('productosCache', JSON.stringify(cacheData));
     
-    // Llama a la función que dibuja la página
     renderizarPagina(data);
 
   } catch(e) {
@@ -290,7 +320,7 @@ async function cargarProductosDesdeSheet(){
   }
 }
 
-// 2. Nueva función: Dibuja la página usando los datos (de caché o de la red)
+// Dibuja la página usando los datos
 function renderizarPagina(data) {
   const spinner = contProductos.querySelector('.spinner-wrap');
   if (spinner) {
@@ -304,6 +334,10 @@ function renderizarPagina(data) {
     const precioNormalStr  = trimAll(stripQuotes(r[2]||""));
     const precioOfertaStr  = trimAll(stripQuotes(r[5]||"")); 
     const urlRaw    = trimAll(stripQuotes(r[IMAGE_COL_INDEX]||""));
+    
+    // =================================================================
+    // CAMBIO JS 1: Capturamos el ID de la imagen aquí
+    // =================================================================
     const id        = extractDriveId(urlRaw);
     
     categorias.add(categoria);
@@ -330,7 +364,7 @@ function renderizarPagina(data) {
     const imgWrap = document.createElement("div");
     imgWrap.className = "imgwrap";
     const onImageLoaded = () => card.classList.add("loaded");
-    const imgEl = buildImageWithFallback(id || urlRaw, onImageLoaded);
+    const imgEl = buildImageWithFallback(id || urlRaw, onImageLoaded); // Usamos el ID
 
     if(imgEl){ imgWrap.appendChild(imgEl); }
     else{
@@ -341,10 +375,14 @@ function renderizarPagina(data) {
     }
 
     card.appendChild(imgWrap);
+    
+    // =================================================================
+    // CAMBIO JS 2: Pasamos el 'id' al botón de añadir
+    // =================================================================
     card.insertAdjacentHTML("beforeend", `
       <div class="nombre">${nombre}</div>
       ${precioHTML} 
-      <button class="btn" onclick="agregarAlCarrito('${nombre}', ${precioFinalNum})">
+      <button class="btn" onclick="agregarAlCarrito('${nombre}', ${precioFinalNum}, '${id}')">
           Añadir al carrito
       </button>
     `);
@@ -358,33 +396,28 @@ function renderizarPagina(data) {
   }
 }
 
-// 3. Nueva función: Revisa el caché al cargar la página
+// Revisa el caché al cargar la página
 function iniciarCarga() {
   const cacheJSON = localStorage.getItem('productosCache');
   if (cacheJSON) {
     const cache = JSON.parse(cacheJSON);
     const ahora = Date.now();
-    const tiempoPasado = (ahora - cache.timestamp) / (1000 * 60); // en minutos
+    const tiempoPasado = (ahora - cache.timestamp) / (1000 * 60); 
     
     if (tiempoPasado < CACHE_DURACION_MINUTOS) {
-      // Si el caché es fresco, úsalo
       console.log("Cargando desde Caché (Rápido)...");
       renderizarPagina(cache.productos);
       return;
     }
   }
   
-  // Si no hay caché o está viejo, carga desde la red
   cargarProductosDesdeSheet();
 }
-/* =================================================================
- * FIN DE LA LÓGICA DE CACHÉ
- * ================================================================= */
 
 
-/* === FUNCIONES DE FILTROS (Sin cambios) === */
+/* === FUNCIONES DE FILTROS === */
 function renderizarFiltros(categoriasSet) {
-  contFiltros.innerHTML = ""; // Limpia filtros por si acaso
+  contFiltros.innerHTML = ""; 
   const categorias = [...categoriasSet].sort();
   const btnTodos = document.createElement('button');
   btnTodos.className = 'btn-filtro active'; 
@@ -419,18 +452,31 @@ function filtrarProductos(categoria) {
   });
 }
 
-/* === FUNCIONES DEL CARRITO (Sin cambios) === */
+/* =================================================================
+ * INICIO: CAMBIOS EN FUNCIONES DEL CARRITO
+ * ================================================================= */
+
 function mostrarCarrito() { modal.style.display = "block"; }
 function ocultarCarrito() { modal.style.display = "none"; }
-function agregarAlCarrito(nombre, precio) {
+
+// CAMBIO JS 3: La función ahora acepta 'imagenId'
+function agregarAlCarrito(nombre, precio, imagenId) {
   const itemExistente = carrito.find(item => item.nombre === nombre);
+  
   if (itemExistente) {
     itemExistente.cantidad++; 
   } else {
-    carrito.push({ nombre: nombre, precio: precio, cantidad: 1 });
+    // Lo añadimos al objeto del carrito
+    carrito.push({
+      nombre: nombre,
+      precio: precio,
+      cantidad: 1,
+      imagenId: imagenId // <-- NUEVA PROPIEDAD
+    });
   }
   renderizarCarrito();
 }
+
 function eliminarDelCarrito(index) {
   carrito.splice(index, 1); 
   renderizarCarrito();
@@ -440,9 +486,12 @@ function vaciarCarrito() {
   renderizarCarrito();
   ocultarCarrito();
 }
+
+// CAMBIO JS 4: Renderizar el carrito con la imagen
 function renderizarCarrito() {
   let total = 0;
   let totalItems = 0;
+  
   if (carrito.length === 0) {
     cartList.innerHTML = "<li>Aún no tienes productos.</li>";
   } else {
@@ -451,16 +500,32 @@ function renderizarCarrito() {
       const subtotal = item.precio * item.cantidad;
       total += subtotal;
       totalItems += item.cantidad;
+      
+      // Creamos la URL de la miniatura de Google Drive
+      let thumbUrl = "https://via.placeholder.com/100x100?text=A&B"; // Placeholder
+      if (item.imagenId) {
+        thumbUrl = `https://drive.google.com/thumbnail?id=${item.imagenId}&sz=w100`;
+      }
+      
       const li = document.createElement("li");
       li.className = "cart-item";
+      
+      // Nuevo HTML para el item del carrito
       li.innerHTML = `
-        <span>${item.cantidad}x ${item.nombre} (Q${subtotal.toFixed(2)})</span>
+        <img src="${thumbUrl}" class="cart-item-img" alt="${item.nombre}" loading="lazy">
+        <div class="cart-item-details">
+          ${item.cantidad}x ${item.nombre}
+          <br>
+          <small>Q${subtotal.toFixed(2)}</small>
+        </div>
         <button onclick="eliminarDelCarrito(${index})">×</button>
       `;
       cartList.appendChild(li);
     });
   }
+  
   cartTotalEl.innerText = `Total: Q${total.toFixed(2)}`;
+  
   if (totalItems > 0) {
     btnFlotante.innerHTML = `🛒 Carrito (${totalItems}) - Q${total.toFixed(2)}`;
     btnFlotante.style.display = "block";
@@ -468,6 +533,7 @@ function renderizarCarrito() {
     btnFlotante.style.display = "none";
   }
 }
+
 function finalizarPedido() {
   if (carrito.length === 0) {
     alert("Tu carrito está vacío.");
@@ -484,10 +550,13 @@ function finalizarPedido() {
   const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(mensaje)}`;
   window.open(url, '_blank');
 }
+/* =================================================================
+ * FIN: CAMBIOS EN FUNCIONES DEL CARRITO
+ * ================================================================= */
+
 
 /* === INICIALIZACIÓN === */
 document.addEventListener("DOMContentLoaded", () => {
-  // Asigna las variables globales a los elementos del DOM
   modal = document.getElementById("modal-carrito");
   btnFlotante = document.getElementById("btn-flotante-carrito");
   cartList = document.getElementById("cart-items");
@@ -501,7 +570,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Llama a la nueva función de carga con caché
   iniciarCarga();
 });
 </script>
