@@ -5,7 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Distribuidora A & B</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<meta name="theme-color" content="#007bff">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dist. A&B">
+
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+
 <style>
   :root{--azul1:#007bff;--azul2:#00c6ff;--verde:#25D366;--sombra:0 4px 12px rgba(0,0,0,.12)}
   *{box-sizing:border-box}
@@ -13,7 +25,7 @@
   header{background:linear-gradient(to right,var(--azul1),var(--azul2));color:#fff;text-align:center;padding:28px 16px}
   header h1{margin:0;font-size:2rem}
   header p{margin:.3rem 0 0;opacity:.95}
-  .intro{background:#fff;border-radius:14px;box-shadow:var(--sombra);padding:16px 20px;margin:18px auto;max-width:820px;width:90%;text-align:center}
+  .intro{background:#fff;border-radius:14px;box-shadow:var(--sombra);padding:16px 20px;margin:18px auto;max-width:820px;width:90%;text-align:center;font-size: 0.95rem;}
   .aviso{background:#ffa500;color:#fff;font-weight:700;text-align:center;padding:10px;margin:12px auto 0;max-width:980px;border-radius:10px}
   #productos{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;padding:22px}
   .card{width:260px;background:#fff;border-radius:16px;box-shadow:var(--sombra);overflow:hidden;text-align:center;transition:.25s transform,.25s box-shadow}
@@ -22,10 +34,49 @@
   .imgwrap img{width:100%;height:100%;object-fit:cover;opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease}
   .card.loaded .imgwrap img{opacity:1;transform:translateY(0)}
   .nombre{font-weight:600;color:#0a2a5f;margin:10px 10px 4px}
-  .precio{font-weight:700;color:#333;margin:0 0 10px}
+  .precio{font-weight:700;color:#333;margin:0 0 10px; font-size: 1.1rem;}
   .btn{display:inline-block;background:var(--verde);color:#fff;text-decoration:none;padding:9px 14px;border-radius:12px;margin:0 0 14px;font-weight:600}
   .btn:hover{filter:brightness(.95)}
   footer{background:#f7f7f7;text-align:center;color:#555;font-size:.9rem;padding:12px;margin-top:8px}
+
+  /* =================================================================
+   * INICIO: CSS PARA PRECIOS DE OFERTA
+   * ================================================================= */
+  .precio-anterior{
+    font-size: 0.9rem;
+    color: #777;
+    text-decoration: line-through;
+    margin: -5px 0 2px;
+  }
+  .precio-oferta{
+    font-weight: 700;
+    color: #c00; /* Rojo */
+    font-size: 1.15rem;
+    margin: 0 0 10px;
+  }
+  /* =================================================================
+   * FIN: CSS PARA PRECIOS DE OFERTA
+   * ================================================================= */
+
+  /* Estilos para el mapa */
+  .mapa-wrap{
+    margin-top: 16px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+  }
+  .mapa-wrap iframe{
+    width: 100%;
+    height: 250px;
+    border: 0;
+  }
+  /* Estilo para mensaje mayorista */
+  .mayorista {
+    margin-top: 12px;
+    font-weight: 600;
+    color: var(--azul1);
+  }
+
 </style>
 </head>
 <body>
@@ -38,8 +89,20 @@
 <div class="intro">
   🧴 Bienvenido a Distribuidora A & B. Conocé nuestros productos de limpieza de calidad premium.<br>
   📍 Mercado Las Victorias, Local No. 44, Zona 5, Huehuetenango.
-</div>
+  
+  <div class="mayorista">
+    Precios especiales a clientes mayoristas
+  </div>
 
+  <div class="mapa-wrap">
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.153716613385!2d-91.46747802580798!3d15.529323153545108!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x858c06e8b8a74eab%3A0x933095c517f7397c!2sMercado%20Las%20Victorias!5e0!3m2!1ses!2sgt!4v1729732560548!5m2!1ses!2sgt" 
+      allowfullscreen="" 
+      loading="lazy" 
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</div>
 <div class="aviso">
   🚚 Entrega GRATIS en compras mayores de Q150 — Pedidos menores, costo de envío Q15 en toda la ciudad de Huehuetenango.
 </div>
@@ -63,64 +126,37 @@ function stripQuotes(x){ return (x||"").replace(/^"+|"+$/g,"").replace(/['“”
 function extractDriveId(url){
   if(!url) return "";
   const u = stripQuotes(url).trim();
-  // uc?id=ID
   let m = u.match(/[?&]id=([a-zA-Z0-9_-]+)/);
   if(m) return m[1];
-  // /file/d/ID/
   m = u.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
   if(m) return m[1];
-  // /d/ID (lh3, etc)
   m = u.match(/\/d\/([a-zA-Z0-9_-]+)/);
   if(m) return m[1];
-  // texto plano que ya es ID
   if(/^[a-zA-Z0-9_-]{25,}$/.test(u)) return u;
   return "";
 }
 
-/* * =================================================================
- * INICIO DE LA CORRECCIÓN 1: Función buildImageWithFallback
- * Ahora acepta 'onLoadCallback'
- * =================================================================
- */
 function buildImageWithFallback(id, onLoadCallback){
   if(!id) return null;
   const primary   = `https://drive.google.com/uc?export=view&id=${id}`;
-  const fallback1 = `https://lh3.googleusercontent.com/d/${id}`; // alternativa estable
-  const fallback2 = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`; // miniatura grande
-
-  // Cache-buster para evitar caché vieja del navegador/CDN
+  const fallback1 = `https://lh3.googleusercontent.com/d/${id}`;
+  const fallback2 = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
   const cb = `cb=${Date.now()}`;
   const seq = [primary, fallback1, fallback2].map(u => u + (u.includes("?") ? "&" : "?") + cb);
-
-  // Creamos el elemento <img> con encadenamiento de fallbacks
   const img = document.createElement("img");
   let idx = 0;
-
-  // **** ¡LA CORRECCIÓN ESTÁ AQUÍ! ****
-  // Asignamos los listeners ANTES de poner el src
-  img.onload = onLoadCallback; // Asignamos el callback que recibimos
-
+  img.onload = onLoadCallback;
   img.onerror = () => {
     idx++;
     if(idx < seq.length) {
-      img.src = seq[idx]; // Intenta con el siguiente fallback
+      img.src = seq[idx];
     } else {
-      // Si todo falla, usa el placeholder.
-      // Esto disparará 'onload' (si placeholder.com funciona)
-      // y mostrará el texto de error.
       img.src = "https://via.placeholder.com/640x400?text=Imagen+no+disponible";
     }
   };
-  
-  // Asignamos el src AL FINAL, después de que los listeners estén listos
   img.src = seq[idx];
   return img;
 }
-/* * =================================================================
- * FIN DE LA CORRECCIÓN 1
- * =================================================================
- */
-
 
 /* Parser CSV simple (maneja comillas) */
 function parseCSV(text){
@@ -151,61 +187,78 @@ async function cargarProductos(){
     const res = await fetch(sheetURL, { cache: "no-store" });
     const text = await res.text();
     const matriz = parseCSV(text);
-    // quitar encabezado si lo hay (primera fila con títulos)
     const data = matriz.slice(1).filter(r => r && r.length);
 
     cont.innerHTML = "";
     data.forEach(r => {
+      // Columnas: A=0, B=1, C=2, D=3, E=4, F=5
       const categoria = trimAll(stripQuotes(r[0]||""));
       const nombre    = trimAll(stripQuotes(r[1]||""));
-      const precio    = trimAll(stripQuotes(r[2]||""));
+      
+      /* =================================================================
+       * INICIO: CAMBIO PARA LEER PRECIOS (COLUMNA C y F)
+       * ================================================================= */
+      const precioNormal  = trimAll(stripQuotes(r[2]||""));
+      const precioOferta  = trimAll(stripQuotes(r[5]||"")); // <-- NUEVO: Lee Columna F
       const urlRaw    = trimAll(stripQuotes(r[IMAGE_COL_INDEX]||""));
       const id        = extractDriveId(urlRaw);
 
-      if(!nombre || !precio) return; // saltar filas vacías
+      if(!nombre || !precioNormal) return; // saltar filas si no hay nombre o precio normal
+
+      // Determina qué precio usar para el botón de WhatsApp
+      const precioParaWhats = precioOferta || precioNormal;
+      let precioHTML = "";
+
+      if(precioOferta){
+        // Si hay precio en Columna F, es una OFERTA
+        precioHTML = `
+          <div class="precio-anterior">Antes: Q${precioNormal}</div>
+          <div class="precio-oferta">OFERTA: Q${precioOferta}</div>
+        `;
+      } else {
+        // Si no, es precio normal
+        precioHTML = `<div class="precio">Q${precioNormal}</div>`;
+      }
+      /* =================================================================
+       * FIN: CAMBIO PARA LEER PRECIOS
+       * ================================================================= */
+
 
       const card = document.createElement("div");
       card.className = "card";
       const imgWrap = document.createElement("div");
       imgWrap.className = "imgwrap";
 
-      /* * =================================================================
-       * INICIO DE LA CORRECCIÓN 2: Cómo se llama a la función
-       * =================================================================
-       */
-      
-      // 1. Define la función de callback primero
       const onImageLoaded = () => {
         card.classList.add("loaded");
       };
-
-      // 2. Pasa el ID y el callback a la función
       const imgEl = buildImageWithFallback(id || urlRaw, onImageLoaded);
 
       if(imgEl){
-        // 3. Simplemente añade la imagen. El 'onload' ya fue asignado dentro de la función.
         imgWrap.appendChild(imgEl);
       }else{
-        // si no logramos ID ni URL válida, placeholder
         const ph = document.createElement("img");
         ph.src = "https://via.placeholder.com/640x400?text=Imagen+no+disponible";
         imgWrap.appendChild(ph);
-        card.classList.add("loaded"); // Carga la tarjeta de todos modos para ver el placeholder
+        card.classList.add("loaded");
       }
-      /* * =================================================================
-       * FIN DE LA CORRECCIÓN 2
-       * =================================================================
-       */
 
       card.appendChild(imgWrap);
+      
+      /* =================================================================
+       * INICIO: CAMBIO PARA INSERTAR EL HTML DEL PRECIO
+       * ================================================================= */
       card.insertAdjacentHTML("beforeend", `
         <div class="nombre">${nombre}</div>
-        <div class="precio">Q${precio}</div>
+        ${precioHTML} 
         <a class="btn" target="_blank"
-            href="https://wa.me/${whatsapp}?text=${encodeURIComponent(`Hola, quiero pedir ${nombre} (Q${precio})`)}">
+            href="https://wa.me/${whatsapp}?text=${encodeURIComponent(`Hola, quiero pedir ${nombre} (Q${precioParaWhats})`)}">
             Pedir por WhatsApp
         </a>
       `);
+      /* =================================================================
+       * FIN: CAMBIO PARA INSERTAR EL HTML DEL PRECIO
+       * ================================================================= */
 
       cont.appendChild(card);
     });
