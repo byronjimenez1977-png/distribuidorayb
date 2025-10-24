@@ -47,9 +47,7 @@
   
   .mayorista {margin-top: 12px;font-weight: 600;color: var(--azul1);}
 
-  /* =================================================================
-   * INICIO: CSS DEL CARRITO DE COMPRAS
-   * ================================================================= */
+  /* CSS DEL CARRITO DE COMPRAS */
 
   /* Botón flotante */
   #btn-flotante-carrito {
@@ -163,9 +161,6 @@
   .btn-vaciar:hover {
     background: #888;
   }
-  /* =================================================================
-   * FIN: CSS DEL CARRITO DE COMPRAS
-   * ================================================================= */
 
 </style>
 </head>
@@ -191,7 +186,8 @@
        📍 Cómo llegar
     </a>
   </div>
-  </div>
+
+</div>
 
 <div class="aviso">
   🚚 Entrega GRATIS en compras mayores de Q150 — Pedidos menores, costo de envío Q15 en toda la ciudad de Huehuetenango.
@@ -210,7 +206,7 @@
     
     <div class="modal-header">
       <h2>Mi Pedido</h2>
-      <span class="modal-cerrar" onclick="ocultarCarrito()">&times;</span>
+      <span class="modal-cerrar" onclick="ocultarCarrito()">×</span>
     </div>
     
     <ul id="cart-items">
@@ -228,29 +224,23 @@
     
   </div>
 </div>
+
+
 <script>
 /* === CONFIGURACIÓN === */
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDuTYvulCwesaBrL74caLRyCnPuBVAMWUSHzfyUelxzclArKYz0H1x6HY5gC0hL3ZPGqkJQbAxsU4D/pub?gid=0&single=true&output=csv";
 const IMAGE_COL_INDEX = 3; // 0=A, 1=B, 2=C, 3=D, 4=E
 const whatsapp = "50247111160";
 
-/* =================================================================
- * INICIO: NUEVAS VARIABLES GLOBALES Y ELEMENTOS DEL CARRITO
- * ================================================================= */
-let carrito = []; // Aquí se guardarán los productos
-
-// Referencias a los elementos del DOM
+/* VARIABLES GLOBALES Y ELEMENTOS DEL CARRITO */
+let carrito = []; 
 let modal, btnFlotante, cartList, cartTotalEl;
-/* =================================================================
- * FIN: NUEVAS VARIABLES GLOBALES
- * ================================================================= */
 
 
-/* === UTILIDADES PARA LIMPIAR / NORMALIZAR === */
+/* === UTILIDADES === */
 function trimAll(x){ return (x||"").toString().replace(/^\s+|\s+$/g,""); }
 function stripQuotes(x){ return (x||"").replace(/^"+|"+$/g,"").replace(/['“”]+/g,""); }
 
-/* Extrae ID desde cualquier formato de Drive */
 function extractDriveId(url){
   if(!url) return "";
   const u = stripQuotes(url).trim();
@@ -286,7 +276,6 @@ function buildImageWithFallback(id, onLoadCallback){
   return img;
 }
 
-/* Parser CSV simple (maneja comillas) */
 function parseCSV(text){
   const rows = [];
   let row = [], cur = "", inQ = false;
@@ -308,7 +297,7 @@ function parseCSV(text){
   return rows;
 }
 
-/* Render principal */
+/* === CARGA DE PRODUCTOS === */
 async function cargarProductos(){
   const cont = document.getElementById("productos");
   try{
@@ -319,31 +308,26 @@ async function cargarProductos(){
 
     cont.innerHTML = "";
     data.forEach(r => {
-      // Columnas: A=0, B=1, C=2, D=3, E=4, F=5
       const nombre    = trimAll(stripQuotes(r[1]||""));
       const precioNormalStr  = trimAll(stripQuotes(r[2]||""));
-      const precioOfertaStr  = trimAll(stripQuotes(r[5]||"")); // Lee Columna F
+      const precioOfertaStr  = trimAll(stripQuotes(r[5]||"")); 
       const urlRaw    = trimAll(stripQuotes(r[IMAGE_COL_INDEX]||""));
       const id        = extractDriveId(urlRaw);
 
-      // Convertimos precios a números para cálculos
       const precioNormalNum = parseFloat(precioNormalStr);
       const precioOfertaNum = parseFloat(precioOfertaStr);
       
-      if(!nombre || isNaN(precioNormalNum)) return; // saltar filas si no hay nombre o precio normal
+      if(!nombre || isNaN(precioNormalNum)) return; 
 
-      // Determina qué precio usar
       const precioFinalNum = precioOfertaNum > 0 ? precioOfertaNum : precioNormalNum;
       
       let precioHTML = "";
       if(precioOfertaNum > 0){
-        // Si hay precio en Columna F, es una OFERTA
         precioHTML = `
           <div class="precio-anterior">Antes: Q${precioNormalNum.toFixed(2)}</div>
           <div class="precio-oferta">OFERTA: Q${precioOfertaNum.toFixed(2)}</div>
         `;
       } else {
-        // Si no, es precio normal
         precioHTML = `<div class="precio">Q${precioNormalNum.toFixed(2)}</div>`;
       }
 
@@ -366,9 +350,6 @@ async function cargarProductos(){
 
       card.appendChild(imgWrap);
       
-      /* =================================================================
-       * INICIO: CAMBIO DEL BOTÓN (AHORA LLAMA A JS)
-       * ================================================================= */
       card.insertAdjacentHTML("beforeend", `
         <div class="nombre">${nombre}</div>
         ${precioHTML} 
@@ -376,9 +357,6 @@ async function cargarProductos(){
             Añadir al carrito
         </button>
       `);
-      /* =================================================================
-       * FIN: CAMBIO DEL BOTÓN
-       * ================================================================= */
 
       cont.appendChild(card);
     });
@@ -393,7 +371,7 @@ async function cargarProductos(){
 }
 
 /* =================================================================
- * INICIO: NUEVAS FUNCIONES DEL CARRITO
+ * INICIO: FUNCIONES DEL CARRITO
  * ================================================================= */
 
 // Muestra el modal
@@ -423,7 +401,7 @@ function agregarAlCarrito(nombre, precio) {
   }
   
   renderizarCarrito();
-  mostrarCarrito(); // Muestra el carrito cada vez que se añade algo
+  // mostrarCarrito(); // <-- ¡CAMBIO REALIZADO! Se quitó esta línea
 }
 
 // Elimina un producto del carrito (por su índice en el array)
@@ -457,7 +435,7 @@ function renderizarCarrito() {
       li.className = "cart-item";
       li.innerHTML = `
         <span>${item.cantidad}x ${item.nombre} (Q${subtotal.toFixed(2)})</span>
-        <button onclick="eliminarDelCarrito(${index})">&times;</button>
+        <button onclick="eliminarDelCarrito(${index})">×</button>
       `;
       cartList.appendChild(li);
     });
@@ -516,9 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Carga los productos desde la hoja de Google
   cargarProductos();
 });
-/* =================================================================
- * FIN: NUEVAS FUNCIONES DEL CARRITO
- * ================================================================= */
+/* =F FIN: FUNCIONES DEL CARRITO */
 </script>
 </body>
 </html>
